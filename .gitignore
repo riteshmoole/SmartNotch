@@ -1,22 +1,9 @@
 .build/
 build/
 .DS_Store
-spikes/**/S1.app
-spikes/**/*.dmg
-spikes/s1-dist/S1
-spikes/s2-geometry/geo
-spikes/s4-eventtap/tap
-spikes/s5-signals/sig
-spikes/tools/mouse
-spikes/tools/click
-spikes/tools/drag
-spikes/tools/concealed
-spikes/tools/volkey
 
-# Owner's private planning brief (not published)
+# Local-only files (not published)
 think-plan-notch-app-prd.md
-
-# Development notes, specs, spikes, and maintainer-only scripts (kept locally, not published)
 CLAUDE.md
 context.md
 .claude/
