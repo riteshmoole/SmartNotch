@@ -9,9 +9,10 @@
 - **Now Playing:** artwork, scrub bar, play/pause/skip, and volume for Music, Spotify, and browser video/audio
 - **File Shelf:** drag files onto the notch to park them, drag them out anywhere, or AirDrop them
 - **Clipboard history:** recent text and images, with passwords skipped automatically
-- **Utilities:** CPU, memory, battery, Wi-Fi, Keep Awake, Focus, Lock, and quick timers
+- **Utilities:** CPU, memory, Wi-Fi, Keep Awake, Focus, Lock, and quick timers
 - **Mirror:** a camera preview to check yourself before a call
 - **Live activities** beside the notch while it's closed: music playing, a timer counting down, or "In a call · Zoom"
+- **Charging animation:** plug in and the notch flashes "Charging" with your battery filling up in green. Unplug and it shows "Unplugged" with your current charge (turn it off in Settings)
 - **Volume HUD (beta):** replaces the macOS volume overlay with one in the notch
 - **Themes:** five built-in themes with optional glow, plus custom themes as simple JSON files
 
