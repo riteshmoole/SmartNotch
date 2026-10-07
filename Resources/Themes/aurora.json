@@ -1,0 +1,10 @@
+{
+  "id": "aurora",
+  "name": "Aurora",
+  "background": "#000000",
+  "foreground": "#FFFFFF",
+  "accent": "#30D158",
+  "glow": true,
+  "glowColor": "#30D158",
+  "glowRadius": 14
+}

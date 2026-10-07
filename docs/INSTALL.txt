@@ -1,0 +1,16 @@
+HOW TO OPEN SMARTNOTCH (one-time, about 30 seconds)
+
+SmartNotch is free and isn't signed with a paid Apple Developer certificate,
+so macOS blocks it the first time. This is expected.
+
+1. Drag SmartNotch into the Applications folder (in this window).
+2. Open SmartNotch from Applications. macOS says it "can't be opened" / "Apple could
+   not verify…". Click "Done" (do NOT move it to the Trash).
+3. Open System Settings → Privacy & Security. Scroll down to the "Security"
+   section. You'll see "SmartNotch was blocked…". Click "Open Anyway".
+4. Confirm with your password or Touch ID, then click "Open Anyway" again.
+
+After that it opens normally. Look for the notch at the top of your screen and
+the SmartNotch icon in the menu bar.
+
+Requirements: a Mac with Apple Silicon (M1 or newer), macOS 14 Sonoma or later.

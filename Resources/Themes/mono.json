@@ -1,0 +1,10 @@
+{
+  "id": "mono",
+  "name": "Mono",
+  "background": "#111111",
+  "foreground": "#E5E5E5",
+  "accent": "#A1A1A6",
+  "glow": false,
+  "glowColor": "#FFFFFF",
+  "glowRadius": 0
+}

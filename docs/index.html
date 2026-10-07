@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartNotch: your Mac's notch, but useful</title>
+<meta name="description" content="Free Dynamic Island-style notch app for Mac: Now Playing, file shelf, clipboard history, quick utilities and live activities. Private and open source.">
+<meta property="og:title" content="SmartNotch: your Mac's notch, but useful">
+<meta property="og:description" content="Free Dynamic Island-style notch app for Mac. Music controls, file shelf, clipboard history, timers and more, right in the notch.">
+<meta property="og:image" content="https://riteshmoole.github.io/SmartNotch/screenshots/media.png">
+<meta property="og:url" content="https://riteshmoole.github.io/SmartNotch/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #07070c;
+    --panel: #12121b;
+    --line: #23232f;
+    --text: #f2f2f7;
+    --muted: #9a9aab;
+    --accent: #0a84ff;
+    --accent-2: #bf5af2;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { position: relative; text-align: center; padding: 72px 0 24px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -40% -10% auto; height: 520px; z-index: -1;
+    background: radial-gradient(closest-side, rgba(10,132,255,.28), transparent),
+                radial-gradient(closest-side at 70% 60%, rgba(191,90,242,.18), transparent);
+    filter: blur(20px);
+  }
+  .hero img.icon { width: 96px; height: 96px; }
+  h1 { font-size: clamp(38px, 7vw, 64px); line-height: 1.05; letter-spacing: -0.03em; margin: 18px 0 12px; }
+  .tag { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); max-width: 640px; margin: 0 auto 30px; }
+  .cta { display: inline-flex; flex-direction: column; align-items: center; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--text); color: #000; font-weight: 650; font-size: 18px;
+    padding: 15px 28px; border-radius: 999px; box-shadow: 0 10px 40px rgba(10,132,255,.35);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 14px 50px rgba(10,132,255,.5); }
+  .btn svg { width: 20px; height: 20px; }
+  .fine { font-size: 14px; color: var(--muted); }
+  .fine a { color: var(--muted); text-decoration: underline; }
+
+  /* Showcase */
+  .stage { margin: 48px auto 0; max-width: 820px; }
+  .screen {
+    border-radius: 18px; padding: 0 0 26px; overflow: hidden;
+    background: linear-gradient(180deg, #2a2240 0%, #171a33 55%, #0d0f1e 100%);
+    border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  }
+  .menubar { height: 26px; background: rgba(255,255,255,.06); }
+  .screen img { display: block; width: 100%; height: auto; margin-top: -26px; }
+  .switch { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .switch button {
+    font: inherit; font-size: 14px; color: var(--muted); background: var(--panel);
+    border: 1px solid var(--line); padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  }
+  .switch button[aria-pressed="true"] { color: var(--text); border-color: var(--accent); background: rgba(10,132,255,.15); }
+
+  /* Sections */
+  section { padding: 64px 0 8px; }
+  h2 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -0.02em; margin: 0 0 8px; }
+  .lead { color: var(--muted); margin: 0 0 28px; max-width: 680px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .emoji { font-size: 22px; display: block; margin-bottom: 10px; }
+
+  .wings { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .wing { background: linear-gradient(180deg, #2a2240, #171a33); border: 1px solid var(--line); border-radius: 14px; padding: 0 0 14px; overflow: hidden; text-align: center; }
+  .wing img { width: 100%; display: block; }
+  .wing span { color: var(--muted); font-size: 14px; }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  ol.steps li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 16px 62px; position: relative; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 18px; top: 15px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 15px; display: grid; place-items: center;
+  }
+  ol.steps b { color: var(--text); }
+  .note { margin-top: 14px; color: var(--muted); font-size: 15px; }
+  kbd { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: #1d1d29; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 1px 6px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--muted); margin: 10px 0 2px; }
+
+  footer { padding: 56px 0 48px; color: var(--muted); font-size: 14px; text-align: center; }
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .hero { padding-top: 48px; }
+    th:nth-child(3), td:nth-child(3) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="icon" src="icon.png" alt="SmartNotch app icon">
+    <h1>Your notch,<br>but useful.</h1>
+    <p class="tag">SmartNotch turns the MacBook notch into a Dynamic Island-style hub with music controls, a file shelf, clipboard history and quick tools. Free, private and open source.</p>
+    <div class="cta">
+      <a class="btn" id="download" href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Download for Mac
+      </a>
+      <span class="fine">Free · Apple Silicon (M1 or newer) · macOS 14+ · <a href="#install">How to open it</a></span>
+    </div>
+
+    <div class="stage">
+      <div class="screen"><div class="menubar"></div><img id="shot" src="screenshots/media.png" alt="SmartNotch open, showing Now Playing with album art, scrub bar and playback controls" width="1252" height="500"></div>
+      <div class="switch" role="group" aria-label="Choose a screenshot">
+        <button aria-pressed="true" data-src="media" data-alt="Now Playing with album art, scrub bar and controls">Now Playing</button>
+        <button aria-pressed="false" data-src="shelf" data-alt="File shelf holding five files with AirDrop and Clear buttons">File Shelf</button>
+        <button aria-pressed="false" data-src="clipboard" data-alt="Clipboard history with recent text and an image">Clipboard</button>
+        <button aria-pressed="false" data-src="utilities" data-alt="Utilities: CPU, memory, battery, Wi-Fi, Keep Awake, Focus, Lock, Mirror and timers">Utilities</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="features">
+    <h2>Everything, one hover away</h2>
+    <p class="lead">Hover over the notch, click it, or press <kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>Space</kbd>. Move away and it tucks itself back in.</p>
+    <div class="grid">
+      <div class="card"><span class="emoji">🎵</span><h3>Now Playing</h3><p>Artwork, scrubbing, play/pause/skip and volume for Music, Spotify and video in your browser.</p></div>
+      <div class="card"><span class="emoji">📥</span><h3>File Shelf</h3><p>Drag files onto the notch to park them. Drag them out to any app or folder, or AirDrop them.</p></div>
+      <div class="card"><span class="emoji">📋</span><h3>Clipboard history</h3><p>Your recent copies, text and images. Passwords from password managers are skipped automatically.</p></div>
+      <div class="card"><span class="emoji">⚡️</span><h3>Quick tools</h3><p>CPU, memory, battery and Wi-Fi at a glance. Keep Awake, Focus, Lock and one-tap timers.</p></div>
+      <div class="card"><span class="emoji">🪞</span><h3>Mirror</h3><p>A quick camera check before a call. It turns off the moment the notch closes.</p></div>
+      <div class="card"><span class="emoji">🎨</span><h3>Themes</h3><p>Five built-in looks with optional glow, or make your own with a tiny JSON file.</p></div>
+    </div>
+  </section>
+
+  <section id="live">
+    <h2>Live activities beside the notch</h2>
+    <p class="lead">Even when it's closed, the notch shows what's happening: music playing, a timer counting down, or your volume.</p>
+    <div class="wings">
+      <div class="wing"><img src="screenshots/wings-media.png" alt="Collapsed notch with album art on the left and animated equalizer bars on the right"><span>Music playing</span></div>
+      <div class="wing"><img src="screenshots/wings-timer.png" alt="Collapsed notch with a timer icon and a 25-minute countdown"><span>Timer</span></div>
+      <div class="wing"><img src="screenshots/wings-volume.png" alt="Collapsed notch showing a speaker icon and volume level bar"><span>Volume (beta)</span></div>
+    </div>
+    <p class="note">No notch? On external displays and older Macs, SmartNotch shows a floating pill instead. It also shows "In a call" when Zoom, FaceTime or Teams is using your mic or camera.</p>
+  </section>
+
+  <section id="install">
+    <h2>Install in a minute</h2>
+    <p class="lead">SmartNotch is a free student project, so it isn't registered with Apple's paid developer program. macOS asks you to confirm once. Here's how:</p>
+    <ol class="steps">
+      <li><b>Download</b> SmartNotch.dmg and open it.</li>
+      <li><b>Drag SmartNotch into Applications.</b></li>
+      <li><b>Open SmartNotch.</b> macOS says it can't verify the app. Click <b>Done</b>. Don't move it to the Trash.</li>
+      <li>Open <b>System Settings → Privacy &amp; Security</b>, scroll down to <b>Security</b>, and click <b>Open Anyway</b> next to "SmartNotch was blocked". Confirm with Touch ID or your password.</li>
+    </ol>
+    <p class="note">That's it. After that it opens like any other app. Look for the icon in your menu bar. The full source code is <a href="https://github.com/riteshmoole/SmartNotch">on GitHub</a> if you'd like to check it first.</p>
+  </section>
+
+  <section id="privacy">
+    <h2>Private by design</h2>
+    <p class="lead">No accounts, no analytics, no tracking. Nothing leaves your Mac. SmartNotch only asks for a permission when you use the feature that needs it.</p>
+    <table>
+      <thead><tr><th>Feature</th><th>Permission</th><th>When it's asked</th></tr></thead>
+      <tbody>
+        <tr><td>Everything else</td><td>None</td><td>Never</td></tr>
+        <tr><td>Mirror</td><td>Camera</td><td>First time you open the Mirror tab</td></tr>
+        <tr><td>Volume HUD (beta, off by default)</td><td>Accessibility</td><td>When you turn it on in Settings</td></tr>
+        <tr><td>Music/Spotify fallback</td><td>Automation</td><td>Only if full media detection stops working after a macOS update</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <details><summary>Does it work on my Mac?</summary><p>Any Mac with Apple Silicon (M1 or newer) running macOS 14 Sonoma or later. Best on MacBooks with a notch. Other screens get a floating pill.</p></details>
+    <details><summary>Why does macOS warn me when I open it?</summary><p>Apple's warning appears for any app that isn't notarized through its $99/year developer program. SmartNotch is free and open source, and you confirm it once in Privacy &amp; Security.</p></details>
+    <details><summary>Will Now Playing always work?</summary><p>It uses a workaround to read what's playing, and a future macOS update could break it. If that happens, SmartNotch falls back to Music and Spotify and tells you, instead of showing an empty panel.</p></details>
+    <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy.</p></details>
+    <details><summary>How do I uninstall it?</summary><p>Quit it from the menu bar icon and drag SmartNotch from Applications to the Trash. Optionally delete <code>~/Library/Application Support/SmartNotch</code>.</p></details>
+    <details><summary>How do I get updates?</summary><p>SmartNotch checks for new versions once a day and shows a download link in Settings → About.</p></details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Made by <a href="https://github.com/riteshmoole">Rick</a> · <a href="https://github.com/riteshmoole/SmartNotch">Source on GitHub</a> · MIT License<br>
+    SmartNotch isn't affiliated with Apple. Dynamic Island is a trademark of Apple Inc.
+  </div>
+</footer>
+
+<script>
+  const shot = document.getElementById('shot');
+  document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.switch button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    shot.src = 'screenshots/' + b.dataset.src + '.png';
+    shot.alt = 'SmartNotch open, showing ' + b.dataset.alt;
+  }));
+</script>
+</body>
+</html>

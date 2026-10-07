@@ -1,0 +1,10 @@
+{
+  "id": "violet",
+  "name": "Violet",
+  "background": "#05020C",
+  "foreground": "#F4EEFF",
+  "accent": "#BF5AF2",
+  "glow": true,
+  "glowColor": "#BF5AF2",
+  "glowRadius": 16
+}

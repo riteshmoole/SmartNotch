@@ -1,0 +1,10 @@
+{
+  "id": "sunset",
+  "name": "Sunset",
+  "background": "#0B0503",
+  "foreground": "#FFF4EC",
+  "accent": "#FF9F0A",
+  "glow": true,
+  "glowColor": "#FF6B2C",
+  "glowRadius": 16
+}

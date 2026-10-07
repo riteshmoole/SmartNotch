@@ -1,0 +1,10 @@
+{
+  "id": "midnight",
+  "name": "Midnight",
+  "background": "#000000",
+  "foreground": "#FFFFFF",
+  "accent": "#0A84FF",
+  "glow": false,
+  "glowColor": "#0A84FF",
+  "glowRadius": 0
+}
