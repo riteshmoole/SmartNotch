@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-/// Themes are pure data (PRD F21). Bundled JSON lives in Contents/Resources/Themes; users can drop
+/// Themes are pure data. Bundled JSON lives in Contents/Resources/Themes; users can drop
 /// their own *.json into ~/Library/Application Support/SmartNotch/Themes.
 struct Theme: Codable, Identifiable, Equatable {
     let id: String

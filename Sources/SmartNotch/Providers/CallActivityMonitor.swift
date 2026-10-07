@@ -2,7 +2,7 @@ import AppKit
 import CoreAudio
 import CoreMediaIO
 
-/// "In a call" live activity (PRD D4b), built only on public signals verified in S5:
+/// "In a call" live activity, built only on public signals verified by testing:
 /// mic or camera is running somewhere, *and* a known conferencing app is running.
 /// It can't know caller names or show Messages banners, and it never reads content.
 /// The 1.5 s device check runs only while a known call app is open.
@@ -89,7 +89,7 @@ final class CallActivityMonitor: ObservableObject {
         if inCall != isInCall { isInCall = inCall }
     }
 
-    // MARK: Device probes (no permission required; verified in S5)
+    // MARK: Device probes (no permission required; verified by testing)
 
     nonisolated static func anyInputRunning() -> Bool {
         var addr = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDevices,

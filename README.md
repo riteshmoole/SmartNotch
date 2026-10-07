@@ -70,6 +70,13 @@ open build/SmartNotch.app
 ./Scripts/package-dmg.sh        # → build/SmartNotch-<version>.dmg
 ```
 
+```
+Sources/SmartNotch/   the app (App, Notch, Views, Providers, Theme)
+Resources/            Info.plist, built-in themes, app icon
+ThirdParty/           vendored mediaremote-adapter (BSD-3)
+Scripts/              build, icon, and DMG packaging scripts
+docs/                 the download page (GitHub Pages)
+```
 
 ## License
 

@@ -3,7 +3,7 @@ import ApplicationServices
 
 /// HUD replacement (beta, off by default). An event tap consumes the volume keys, sets the volume
 /// ourselves, and shows our HUD in the notch. Needs Accessibility: the TCC permission that lets
-/// an app watch or alter input meant for other apps. S4 verified the native HUD stays hidden.
+/// an app watch or alter input meant for other apps. Testing verified the native HUD stays hidden.
 @MainActor
 final class MediaKeyTap: ObservableObject {
     @Published private(set) var isTrusted = AXIsProcessTrusted()

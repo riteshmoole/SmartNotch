@@ -13,7 +13,7 @@ struct ClipItem: Identifiable {
     var text: String? { if case .text(let s) = content { s } else { nil } }
 }
 
-/// Clipboard history with privacy defaults (PRD F12):
+/// Clipboard history with privacy defaults:
 /// - in memory only unless the user opts into persistence (text only, never images)
 /// - skips items marked concealed/transient/auto-generated (password managers set these)
 /// - skips copies made while an excluded app is frontmost

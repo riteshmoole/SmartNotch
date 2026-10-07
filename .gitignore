@@ -15,3 +15,14 @@ spikes/tools/volkey
 
 # Owner's private planning brief (not published)
 think-plan-notch-app-prd.md
+
+# Development notes, specs, spikes, and maintainer-only scripts (kept locally, not published)
+CLAUDE.md
+context.md
+.claude/
+docs/PRD.md
+docs/spikes/
+spikes/
+Scripts/release.sh
+Scripts/notarize.sh
+Scripts/measure-idle.sh

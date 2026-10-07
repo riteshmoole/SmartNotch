@@ -35,7 +35,7 @@ enum NowPlayingSource: Equatable {
     case appleScript
 }
 
-/// Now Playing, hybrid strategy (PRD D2c):
+/// Now Playing, hybrid strategy:
 /// 1. Copy the adapter out of the bundle (quarantine-safe), then `/usr/bin/perl mediaremote-adapter.pl … test`. If it passes, stream JSON updates from `… stream`.
 /// 2. If the adapter is missing, fails its test, or crashes 3× in 60 s, poll Music/Spotify via AppleScript.
 /// The UI always has a state to render. It never shows a blank panel.
@@ -62,7 +62,7 @@ final class NowPlayingProvider: ObservableObject {
     }
     private var adapterFiles: AdapterFiles?
 
-    /// A downloaded app carries the com.apple.quarantine flag, and S1/M2 testing showed perl then
+    /// A downloaded app carries the com.apple.quarantine flag, and testing showed perl then
     /// refuses to load the quarantined framework, and macOS shows a "can't verify… malware"
     /// alert. An app run straight from Downloads is also translocated to a read-only mount, so we
     /// can't clear the flag in place. Copy the three files into Application Support and clear the

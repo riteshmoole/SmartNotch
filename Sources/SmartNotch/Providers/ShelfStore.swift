@@ -12,7 +12,7 @@ struct ShelfItem: Codable, Identifiable, Equatable {
     let isReference: Bool
 }
 
-/// Temporary file shelf (PRD D5a). Dropped files are *cloned* into Application Support.
+/// Temporary file shelf. Dropped files are *cloned* into Application Support.
 /// On APFS that is copy-on-write (clonefile), so it uses no extra disk until either copy changes,
 /// and the shelf survives the original being moved or deleted. Files on another volume are
 /// referenced instead of copied, so a 50 GB drag from an external drive never fills the disk.

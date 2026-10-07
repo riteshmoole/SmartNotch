@@ -2,7 +2,7 @@ import AppKit
 
 /// Once-a-day check of GitHub Releases for a newer version. No Sparkle: unnotarized updates would
 /// hit Gatekeeper anyway, so we just link to the download page.
-/// Disabled until `repository` is set (PRD open question #4).
+/// Disabled until `repository` is set.
 @MainActor
 final class UpdateChecker: ObservableObject {
     /// "owner/repo" on GitHub. Leave empty to make no network requests at all.
