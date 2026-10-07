@@ -23,7 +23,8 @@ enum AppPaths {
 /// Global actions the SwiftUI layer can trigger without holding a reference to AppKit controllers.
 @MainActor
 enum AppActions {
-    static var openSettings: () -> Void = {}
+    /// Opens the Settings window. A tab switches to it; nil keeps whichever tab was last shown.
+    static var openSettings: (SettingsTab?) -> Void = { _ in }
     static var collapse: () -> Void = {}
     /// Collapses only if the given screen point is outside the open island.
     static var collapseIfOutside: (CGPoint) -> Void = { _ in }

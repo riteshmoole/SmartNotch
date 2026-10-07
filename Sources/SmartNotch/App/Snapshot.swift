@@ -55,6 +55,14 @@ enum Snapshot {
             shoot(vm, state, dir.appendingPathComponent("\(tab.rawValue).png"), crop: g.expandedRect.insetBy(dx: -14, dy: -14))
         }
 
+        // Gear badge for the "updates" section of the page, cropped to the header row.
+        state.updates.setDemo(latest: "9.9.9", summary: "Demo release")
+        state.activeTab = .media
+        let e = g.expandedRect
+        shoot(vm, state, dir.appendingPathComponent("update-badge.png"),
+              crop: CGRect(x: e.minX - 14, y: e.maxY - 36, width: e.width + 28, height: 50))
+        state.updates.setDemo(latest: "0", summary: "")
+
         vm.isExpanded = false
         state.timers.timers.forEach(state.timers.cancel)
         let wingCrop = g.collapsedRect(wing: CollapsedActivity.hud.wingWidth).insetBy(dx: -24, dy: -10)

@@ -18,7 +18,7 @@ struct ExpandedView: View {
                 TabBar(app: app, settings: app.settings, theme: theme)
                     .frame(width: sideWidth, alignment: .leading)
                 if geometry.hasNotch { Spacer(minLength: geometry.coreSize.width) } else { Spacer(minLength: 0) }
-                HeaderStatus(keepAwake: app.keepAwake, theme: theme)
+                HeaderStatus(keepAwake: app.keepAwake, updates: app.updates, theme: theme)
                     .frame(width: sideWidth, alignment: .trailing)
             }
             .frame(height: topRowHeight)
@@ -80,6 +80,7 @@ private struct TabBar: View {
 
 private struct HeaderStatus: View {
     @ObservedObject var keepAwake: KeepAwake
+    @ObservedObject var updates: UpdateChecker
     let theme: Theme
 
     var body: some View {
@@ -88,12 +89,22 @@ private struct HeaderStatus: View {
                 Image(systemName: "cup.and.saucer.fill").foregroundStyle(theme.accentColor)
                     .help("Keep Awake is on")
             }
-            Button { AppActions.openSettings() } label: {
-                Image(systemName: "gearshape.fill").frame(width: 22, height: 22).contentShape(Rectangle())
+            Button { AppActions.openSettings(updates.updateAvailable ? .about : nil) } label: {
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 13, weight: .semibold)) // optically matches the 12 pt tab icons
+                    .frame(width: 28, height: 24).contentShape(Rectangle())
+                    .overlay(alignment: .topTrailing) {
+                        if updates.updateAvailable {
+                            Circle().fill(Color.red)
+                                .frame(width: 7, height: 7)
+                                .overlay(Circle().stroke(Color.black, lineWidth: 1.5))
+                                .offset(x: -5, y: 2)
+                        }
+                    }
             }
             .buttonStyle(.plain)
-            .help("Settings")
-            .accessibilityLabel("Settings")
+            .help(updates.updateAvailable ? "Update available: SmartNotch \(updates.latestVersion ?? "")" : "Settings")
+            .accessibilityLabel(updates.updateAvailable ? "Settings, update available" : "Settings")
         }
         .font(.system(size: 11, weight: .medium))
         .foregroundStyle(theme.foregroundColor.opacity(0.75))

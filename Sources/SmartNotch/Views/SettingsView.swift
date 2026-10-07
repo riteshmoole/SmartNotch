@@ -1,20 +1,35 @@
 import SwiftUI
 
+enum SettingsTab: Hashable {
+    case general, modules, appearance, about
+}
+
+/// Which Settings tab is showing, so the notch's gear can open straight to About when an update is waiting.
+@MainActor
+final class SettingsNavigation: ObservableObject {
+    @Published var tab: SettingsTab = .general
+}
+
 struct SettingsView: View {
     let state: AppState
     @ObservedObject var settings: Settings
     @ObservedObject var themes: ThemeStore
+    @ObservedObject var nav: SettingsNavigation
 
     var body: some View {
-        TabView {
+        TabView(selection: $nav.tab) {
             GeneralSettings(settings: settings, updates: state.updates)
                 .tabItem { Label("General", systemImage: "gearshape") }
+                .tag(SettingsTab.general)
             ModuleSettings(settings: settings, mediaKeys: state.mediaKeys, nowPlaying: state.nowPlaying, clipboard: state.clipboard)
                 .tabItem { Label("Modules", systemImage: "square.grid.2x2") }
+                .tag(SettingsTab.modules)
             AppearanceSettings(settings: settings, themes: themes)
                 .tabItem { Label("Appearance", systemImage: "paintpalette") }
-            AboutSettings(updates: state.updates)
+                .tag(SettingsTab.appearance)
+            AboutSettings(updates: state.updates, settings: settings)
                 .tabItem { Label("About", systemImage: "info.circle") }
+                .tag(SettingsTab.about)
         }
         .padding(16)
         .frame(width: 560, height: 480)
@@ -179,29 +194,82 @@ private struct AppearanceSettings: View {
 
 private struct AboutSettings: View {
     @ObservedObject var updates: UpdateChecker
+    @ObservedObject var settings: Settings
 
     var body: some View {
+        ScrollView {
         VStack(spacing: 10) {
             Image(nsImage: NSApp.applicationIconImage).resizable().frame(width: 72, height: 72)
             Text("SmartNotch").font(.title2.bold())
             Text("Version \(updates.currentVersion)").foregroundStyle(.secondary)
-            if updates.updateAvailable, let url = updates.releaseURL {
-                Link("Version \(updates.latestVersion ?? "") is available. Download it.", destination: url)
+            if !UpdateChecker.repository.isEmpty {
+                if updates.updateAvailable {
+                    UpdateCard(updates: updates)
+                } else if settings.checkForUpdates {
+                    UpdateStatusLine(updates: updates)
+                }
             }
             Text("A Dynamic Island-style notch for your Mac.\nFree and open source under the MIT License.")
                 .multilineTextAlignment(.center).font(.callout)
             Divider().padding(.vertical, 4)
             VStack(alignment: .leading, spacing: 4) {
                 Text("Privacy").font(.headline)
-                Text("Everything stays on your Mac. No accounts, no analytics, no tracking. Clipboard history lives in memory unless you choose to save it. The camera only runs while the Mirror tab is open.")
-                    .font(.caption).foregroundStyle(.secondary)
+                Text("Everything stays on your Mac. No accounts, no analytics, no tracking. Clipboard history lives in memory unless you choose to save it. The camera only runs while the Mirror tab is open. The only network request is the daily update check, which you can turn off in General.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 Text("Third-party").font(.headline).padding(.top, 4)
                 Text("mediaremote-adapter © Jonas van den Berg and contributors, BSD 3-Clause License.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: 440, alignment: .leading)
-            Spacer()
         }
         .padding()
+        .frame(maxWidth: .infinity)
+        }
+    }
+}
+
+private struct UpdateCard: View {
+    @ObservedObject var updates: UpdateChecker
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("SmartNotch \(updates.latestVersion ?? "") is available", systemImage: "arrow.down.circle.fill")
+                .font(.headline).foregroundStyle(Color.accentColor)
+            if let summary = updates.releaseSummary {
+                Text(verbatim: summary).font(.callout).fixedSize(horizontal: false, vertical: true)
+            }
+            Text("To update: download it, quit SmartNotch, then drag the new app into Applications and choose Replace. Your settings and permissions carry over.")
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            HStack {
+                Button("Download") { NSWorkspace.shared.open(UpdateChecker.downloadURL) }
+                    .buttonStyle(.borderedProminent)
+                if let url = updates.releaseURL {
+                    Link("What's new", destination: url)
+                }
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: 440, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color.accentColor.opacity(0.1)))
+    }
+}
+
+private struct UpdateStatusLine: View {
+    @ObservedObject var updates: UpdateChecker
+
+    private var status: String {
+        if updates.isChecking { return "Checking for updates…" }
+        if updates.lastCheckFailed { return "Couldn't check for updates." }
+        if updates.lastChecked != nil { return "You're up to date." }
+        return ""
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(status).font(.caption).foregroundStyle(.secondary)
+            Button("Check Now") { updates.check() }
+                .controlSize(.small)
+                .disabled(updates.isChecking)
+        }
     }
 }

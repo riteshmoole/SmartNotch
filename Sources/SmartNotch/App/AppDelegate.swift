@@ -1,5 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
+import Combine
 import ServiceManagement
 import SwiftUI
 
@@ -10,13 +11,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var hotKey: HotKey?
     private var settingsWindow: NSWindow?
+    private let settingsNav = SettingsNavigation()
     private var onboardingWindow: NSWindow?
     private var signalSources: [DispatchSourceSignal] = []
+    private var updateItem: NSMenuItem?
+    private var updateSeparator: NSMenuItem?
+    private var bag = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         state.start()
         notchManager = NotchManager(state: state)
-        AppActions.openSettings = { [weak self] in self?.showSettings() }
+        AppActions.openSettings = { [weak self] tab in self?.showSettings(tab) }
         AppActions.collapse = { [weak self] in self?.notchManager.collapse() }
         AppActions.collapseIfOutside = { [weak self] p in self?.notchManager.collapseIfOutside(p) }
 
@@ -53,6 +58,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = NSImage(systemSymbolName: "capsule.portrait.tophalf.filled", accessibilityDescription: "SmartNotch")
             ?? NSImage(systemSymbolName: "capsule.fill", accessibilityDescription: "SmartNotch")
         let menu = NSMenu()
+        let update = item("Update Available…", #selector(showUpdate))
+        let updateSep = NSMenuItem.separator()
+        update.isHidden = true; updateSep.isHidden = true
+        menu.addItem(update)
+        menu.addItem(updateSep)
+        updateItem = update; updateSeparator = updateSep
         menu.addItem(item("Open SmartNotch", #selector(toggleNotch), key: " ", mods: [.control, .option]))
         menu.addItem(.separator())
         menu.addItem(item("Settings…", #selector(openSettings), key: ","))
@@ -62,6 +73,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(item("About SmartNotch", #selector(about)))
         menu.addItem(item("Quit SmartNotch", #selector(quit), key: "q"))
         statusItem.menu = menu
+
+        state.updates.$latestVersion.receive(on: RunLoop.main).sink { [weak self] _ in
+            self?.refreshUpdateItem()
+        }.store(in: &bag)
+    }
+
+    private func refreshUpdateItem() {
+        let u = state.updates
+        updateItem?.isHidden = !u.updateAvailable
+        updateSeparator?.isHidden = !u.updateAvailable
+        updateItem?.title = "Update Available: SmartNotch \(u.latestVersion ?? "")…"
     }
 
     private func item(_ title: String, _ action: Selector, key: String = "", mods: NSEvent.ModifierFlags = .command) -> NSMenuItem {
@@ -73,6 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleNotch() { notchManager.toggle() }
     @objc private func openSettings() { showSettings() }
+    @objc private func showUpdate() { showSettings(.about) }
     @objc private func clearShelf() { state.shelf.clear() }
     @objc private func clearClipboard() { state.clipboard.clear() }
     @objc private func quit() { NSApp.terminate(nil) }
@@ -85,11 +108,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: Windows
 
-    func showSettings() {
+    func showSettings(_ tab: SettingsTab? = nil) {
         notchManager.collapse()
+        if let tab { settingsNav.tab = tab }
         if settingsWindow == nil {
             settingsWindow = makeWindow(title: "SmartNotch Settings", size: NSSize(width: 560, height: 480),
-                                        root: SettingsView(state: state, settings: state.settings, themes: state.themes))
+                                        root: SettingsView(state: state, settings: state.settings, themes: state.themes, nav: settingsNav))
         }
         present(settingsWindow!)
     }

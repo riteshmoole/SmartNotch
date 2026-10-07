@@ -33,6 +33,16 @@ Free, open source (MIT), and private: **no accounts, no analytics, nothing leave
 
 You only do this once. *Why the warning?* SmartNotch is a free project that isn't signed with a paid ($99/yr) Apple Developer certificate, so macOS can't vouch for it. The full source is right here if you want to check it or build it yourself.
 
+## Updating
+
+SmartNotch checks GitHub for a new version when it starts and once a day. When one is out, a red dot appears on the ⚙️ gear in the open notch, and the menu bar icon gets an **Update Available** item. Click either to see what's new, then:
+
+1. Click **Download**, and quit SmartNotch from its menu bar icon.
+2. Open the new DMG and drag **SmartNotch** into **Applications**. Choose **Replace**.
+3. Open SmartNotch. Your settings and permissions carry over. If macOS asks again, use **Open Anyway** as above.
+
+Prefer no network at all? Turn off **Settings → General → Check for updates once a day**.
+
 ## Permissions: only when you use the feature
 
 SmartNotch asks for nothing at first launch.
@@ -52,6 +62,7 @@ SmartNotch **never** asks for Location, Full Disk Access, or Screen Recording.
 - Shelf files are stored in `~/Library/Application Support/SmartNotch/Shelf` and cleared automatically (24 h by default).
 - The "In a call" indicator only checks *whether* your mic or camera is busy while a call app is open. It never sees who you're talking to.
 - The notch is hidden from screen sharing and recordings by default.
+- The only network request is the update check: a plain download of the latest release info from GitHub, which sends nothing about you or your Mac. You can turn it off.
 
 ## Known limits (honest list)
 

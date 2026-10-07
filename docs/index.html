@@ -180,9 +180,16 @@
     <p class="note">That's it. After that it opens like any other app. Look for the icon in your menu bar. The full source code is <a href="https://github.com/riteshmoole/SmartNotch">on GitHub</a> if you'd like to check it first.</p>
   </section>
 
+  <section id="updates">
+    <h2>Updates find you</h2>
+    <p class="lead">When a new version is out, a red dot appears on the gear in the open notch. Click it to see what's new and download it. The menu bar icon gets an <b>Update Available</b> item too.</p>
+    <div class="wing" style="max-width:640px;margin-top:18px"><img src="screenshots/update-badge.png" alt="The top row of the open notch, with a small red dot on the settings gear at the right"><span>A new version is ready</span></div>
+    <p class="note">To update, quit SmartNotch, drag the new version into Applications and choose Replace. Your settings and permissions carry over.</p>
+  </section>
+
   <section id="privacy">
     <h2>Private by design</h2>
-    <p class="lead">No accounts, no analytics, no tracking. Nothing leaves your Mac. SmartNotch only asks for a permission when you use the feature that needs it.</p>
+    <p class="lead">No accounts, no analytics, no tracking. Nothing about you leaves your Mac. The only network request is a daily check for new versions, and you can turn it off. SmartNotch only asks for a permission when you use the feature that needs it.</p>
     <table>
       <thead><tr><th>Feature</th><th>Permission</th><th>When it's asked</th></tr></thead>
       <tbody>
@@ -201,7 +208,7 @@
     <details><summary>Will Now Playing always work?</summary><p>It uses a workaround to read what's playing, and a future macOS update could break it. If that happens, SmartNotch falls back to Music and Spotify and tells you, instead of showing an empty panel.</p></details>
     <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy.</p></details>
     <details><summary>How do I uninstall it?</summary><p>Quit it from the menu bar icon and drag SmartNotch from Applications to the Trash. Optionally delete <code>~/Library/Application Support/SmartNotch</code>.</p></details>
-    <details><summary>How do I get updates?</summary><p>SmartNotch checks for new versions once a day and shows a download link in Settings → About.</p></details>
+    <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, download, quit SmartNotch, and drag the new version into Applications (choose Replace). The <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg">download link</a> always serves the newest version too.</p></details>
   </section>
 </main>
 
