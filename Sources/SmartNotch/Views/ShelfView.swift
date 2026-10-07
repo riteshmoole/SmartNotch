@@ -63,22 +63,10 @@ private struct ShelfTile: View {
         VStack(spacing: 4) {
             Image(nsImage: NSWorkspace.shared.icon(forFile: item.url.path))
                 .resizable().frame(width: 52, height: 52)
-                .overlay(alignment: .topTrailing) {
-                    if hovering {
-                        Button { shelf.remove(item) } label: {
-                            Image(systemName: "xmark.circle.fill").font(.system(size: 14))
-                                .symbolRenderingMode(.palette).foregroundStyle(.white, .black.opacity(0.7))
-                        }
-                        .buttonStyle(.plain)
-                        .offset(x: 6, y: -6)
-                        .accessibilityLabel("Remove from shelf")
-                    }
-                }
                 .overlay(alignment: .bottomLeading) {
                     if item.isReference {
                         Image(systemName: "link").font(.system(size: 9, weight: .bold))
                             .padding(3).background(.black.opacity(0.7), in: Circle())
-                            .help("Kept as a link to the original (it's on another drive)")
                     }
                 }
             Text(verbatim: item.name.displaySafe)
@@ -90,17 +78,20 @@ private struct ShelfTile: View {
         }
         .padding(6)
         .background(RoundedRectangle(cornerRadius: 10).fill(.white.opacity(hovering ? 0.1 : 0)))
-        .onHover { hovering = $0 }
-        .onDrag { NSItemProvider(contentsOf: item.url) ?? NSItemProvider() }
-        .onTapGesture(count: 2) { shelf.open(item) }
-        .contextMenu {
-            Button("Open") { shelf.open(item) }
-            Button("Show in Finder") { shelf.reveal(item) }
-            if shelf.isAirDropAvailable { Button("AirDrop") { shelf.airDrop([item]) } }
-            Divider()
-            Button("Remove from Shelf") { shelf.remove(item) }
+        // Drag, double-click and right-click are handled natively (see FileDragSource).
+        .overlay(FileDragSource(item: item, shelf: shelf))
+        .overlay(alignment: .topTrailing) {
+            if hovering {
+                Button { shelf.remove(item) } label: {
+                    Image(systemName: "xmark.circle.fill").font(.system(size: 14))
+                        .symbolRenderingMode(.palette).foregroundStyle(.white, .black.opacity(0.7))
+                }
+                .buttonStyle(.plain)
+                .offset(x: -6, y: 0)
+                .accessibilityLabel("Remove from shelf")
+            }
         }
-        .help(item.originalPath.displaySafe)
+        .onHover { hovering = $0 }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(item.name.displaySafe)
     }

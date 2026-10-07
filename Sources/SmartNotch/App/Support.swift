@@ -25,6 +25,8 @@ enum AppPaths {
 enum AppActions {
     static var openSettings: () -> Void = {}
     static var collapse: () -> Void = {}
+    /// Collapses only if the given screen point is outside the open island.
+    static var collapseIfOutside: (CGPoint) -> Void = { _ in }
 }
 
 extension String {

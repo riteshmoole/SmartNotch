@@ -23,6 +23,7 @@ final class Settings: ObservableObject {
     @Published var clipboardExcludedApps: [String] { didSet { d.set(clipboardExcludedApps, forKey: "clipboardExcludedApps") } }
     @Published var callActivityEnabled: Bool { didSet { d.set(callActivityEnabled, forKey: "callActivityEnabled") } }
     @Published var hudReplacement: Bool { didSet { d.set(hudReplacement, forKey: "hudReplacement") } }
+    @Published var chargingAnimation: Bool { didSet { d.set(chargingAnimation, forKey: "chargingAnimation") } }
 
     // Appearance
     @Published var themeID: String { didSet { d.set(themeID, forKey: "themeID") } }
@@ -43,7 +44,7 @@ final class Settings: ObservableObject {
             "showWings": true, "hideFromScreenShare": true,
             "mediaEnabled": true, "shelfEnabled": true, "shelfAutoClearHours": 24,
             "clipboardEnabled": true, "clipboardPersist": false, "clipboardExcludedApps": Self.defaultExcludedApps,
-            "callActivityEnabled": true, "hudReplacement": false,
+            "callActivityEnabled": true, "hudReplacement": false, "chargingAnimation": true,
             "themeID": "midnight", "glowEnabled": true,
             "checkForUpdates": true, "hasCompletedOnboarding": false,
         ])
@@ -61,6 +62,7 @@ final class Settings: ObservableObject {
         clipboardExcludedApps = d.stringArray(forKey: "clipboardExcludedApps") ?? Self.defaultExcludedApps
         callActivityEnabled = d.bool(forKey: "callActivityEnabled")
         hudReplacement = d.bool(forKey: "hudReplacement")
+        chargingAnimation = d.bool(forKey: "chargingAnimation")
         themeID = d.string(forKey: "themeID") ?? "midnight"
         glowEnabled = d.bool(forKey: "glowEnabled")
         checkForUpdates = d.bool(forKey: "checkForUpdates")

@@ -67,6 +67,14 @@ enum Snapshot {
         settle()
         shoot(vm, state, dir.appendingPathComponent("wings-timer.png"), crop: wingCrop)
 
+        state.showCharging(BatteryInfo(percent: 72, isCharging: true, onAC: true))
+        state.recomputeActivity()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+        shoot(vm, state, dir.appendingPathComponent("wings-charging-start.png"), crop: g.collapsedRect(wing: CollapsedActivity.charging.wingWidth).insetBy(dx: -24, dy: -16))
+        RunLoop.main.run(until: Date().addingTimeInterval(0.8))
+        shoot(vm, state, dir.appendingPathComponent("wings-charging.png"), crop: g.collapsedRect(wing: CollapsedActivity.charging.wingWidth).insetBy(dx: -24, dy: -16))
+        RunLoop.main.run(until: Date().addingTimeInterval(3.2)) // let the flash end
+
         state.showHUD(.volume(level: 0.56, muted: false))
         state.recomputeActivity()
         settle()
@@ -97,9 +105,7 @@ enum Snapshot {
             ClipItem(content: .text("Oat milk, coffee beans, bananas, basil"), date: now.addingTimeInterval(-3600), sourceBundleID: "com.apple.Notes"),
         ])
 
-        state.stats.setDemo(cpu: 0.12, memUsed: 9.4 * 1_073_741_824,
-                            battery: BatteryInfo(percent: 86, isCharging: false, onAC: false),
-                            wifi: WiFiInfo(isOn: true, rssi: -48))
+        state.stats.setDemo(cpu: 0.12, memUsed: 9.4 * 1_073_741_824, wifi: WiFiInfo(isOn: true, rssi: -48))
     }
 
     /// Original abstract cover art: a warm gradient with a soft "sun".

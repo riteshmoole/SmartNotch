@@ -28,6 +28,11 @@ struct CollapsedWingsView: View {
                 Image(systemName: Self.speakerSymbol(level: level, muted: muted))
                     .font(.system(size: 13, weight: .semibold))
             }
+        case .charging:
+            Text("Charging")
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .fixedSize()
         case .call:
             HStack(spacing: 4) {
                 Circle().fill(call.cameraOn ? Color.green : Color.orange).frame(width: 7, height: 7)
@@ -58,6 +63,14 @@ struct CollapsedWingsView: View {
                 LevelBar(value: muted ? 0 : Double(level), tint: theme.accentColor)
                     .frame(width: 46, height: 5)
             }
+        case .charging:
+            if let b = app.chargingFlash {
+                HStack(spacing: 5) {
+                    Text(verbatim: "\(b.percent)%").monospacedDigit().foregroundStyle(ChargingBattery.green)
+                    ChargingBattery(percent: b.percent).frame(width: 27, height: 13)
+                }
+                .fixedSize()
+            }
         case .call:
             Text(verbatim: call.appName ?? "Call").lineLimit(1).minimumScaleFactor(0.7).foregroundStyle(.green)
         case .timer:
@@ -80,6 +93,52 @@ struct CollapsedWingsView: View {
     static func speakerSymbol(level: Float, muted: Bool) -> String {
         if muted || level == 0 { return "speaker.slash.fill" }
         return level < 0.34 ? "speaker.wave.1.fill" : level < 0.67 ? "speaker.wave.2.fill" : "speaker.wave.3.fill"
+    }
+}
+
+/// Battery glyph that fills up to the charge level with a pulsing bolt, like the iPhone's
+/// Dynamic Island charging indicator. Animates once on appear (shortened when Reduce Motion is on).
+struct ChargingBattery: View {
+    static let green = Color(red: 0.2, green: 0.84, blue: 0.29)
+    let percent: Int
+    @ViewState private var fill: Double = 0
+    @ViewState private var pulse = false
+
+    var body: some View {
+        let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        GeometryReader { geo in
+            let bodyW = geo.size.width - 3
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 3.5, style: .continuous)
+                    .stroke(.white.opacity(0.45), lineWidth: 1)
+                    .frame(width: bodyW)
+                RoundedRectangle(cornerRadius: 2, style: .continuous)
+                    .fill(Self.green)
+                    .frame(width: max(2, (bodyW - 4) * fill))
+                    .padding(.leading, 2)
+                    .padding(.vertical, 2)
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: geo.size.height * 0.7, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.5), radius: 1)
+                    .scaleEffect(pulse ? 1.12 : 0.9)
+                    .frame(width: bodyW)
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(.white.opacity(0.45))
+                    .frame(width: 2, height: geo.size.height * 0.4)
+                    .offset(x: bodyW + 1)
+            }
+            .frame(height: geo.size.height)
+        }
+        .onAppear {
+            withAnimation(.easeOut(duration: reduceMotion ? 0.01 : 0.9).delay(reduceMotion ? 0 : 0.15)) {
+                fill = Double(max(4, min(100, percent))) / 100
+            }
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.55).repeatCount(5, autoreverses: true)) { pulse = true }
+        }
+        .accessibilityElement()
+        .accessibilityLabel("Charging, \(percent) percent")
     }
 }
 

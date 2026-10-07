@@ -89,6 +89,11 @@ final class NotchManager {
         state.setExpanded(false)
     }
 
+    func collapseIfOutside(_ p: CGPoint) {
+        guard let e = expanded, !e.expandedRect.insetBy(dx: -8, dy: -8).contains(p) else { return }
+        collapse()
+    }
+
     // MARK: Mouse
 
     private func installMonitors() {

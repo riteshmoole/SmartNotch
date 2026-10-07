@@ -18,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         notchManager = NotchManager(state: state)
         AppActions.openSettings = { [weak self] in self?.showSettings() }
         AppActions.collapse = { [weak self] in self?.notchManager.collapse() }
+        AppActions.collapseIfOutside = { [weak self] p in self?.notchManager.collapseIfOutside(p) }
 
         // ⌃⌥Space toggles the island, so hover is never the only way in.
         hotKey = HotKey(keyCode: UInt32(kVK_Space), modifiers: UInt32(controlKey | optionKey)) { [weak self] in

@@ -56,6 +56,7 @@ struct NotchRootView: View {
     }
 
     private var glowColor: Color {
+        if !expanded && app.activity == .charging { return ChargingBattery.green.opacity(0.55) }
         guard expanded else { return .clear }
         if settings.glowEnabled && theme.glow { return theme.glowSwiftColor.opacity(0.75) }
         return .black.opacity(0.5)
@@ -85,7 +86,7 @@ struct NotchRootView: View {
             }
             .frame(width: islandSize.width, height: islandSize.height)
             .clipShape(shape)
-            .shadow(color: glowColor, radius: expanded ? max(10, theme.glowRadius) : 0)
+            .shadow(color: glowColor, radius: expanded ? max(10, theme.glowRadius) : (app.activity == .charging ? 10 : 0))
             .onDrop(of: [.fileURL], isTargeted: $vm.isDropTargeted) { providers in
                 guard settings.shelfEnabled else { return false }
                 app.shelf.add(providers: providers)

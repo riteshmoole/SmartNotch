@@ -18,7 +18,7 @@ struct ExpandedView: View {
                 TabBar(app: app, settings: app.settings, theme: theme)
                     .frame(width: sideWidth, alignment: .leading)
                 if geometry.hasNotch { Spacer(minLength: geometry.coreSize.width) } else { Spacer(minLength: 0) }
-                HeaderStatus(app: app, stats: app.stats, keepAwake: app.keepAwake, theme: theme)
+                HeaderStatus(keepAwake: app.keepAwake, theme: theme)
                     .frame(width: sideWidth, alignment: .trailing)
             }
             .frame(height: topRowHeight)
@@ -79,8 +79,6 @@ private struct TabBar: View {
 }
 
 private struct HeaderStatus: View {
-    @ObservedObject var app: AppState
-    @ObservedObject var stats: SystemStats
     @ObservedObject var keepAwake: KeepAwake
     let theme: Theme
 
@@ -89,13 +87,6 @@ private struct HeaderStatus: View {
             if keepAwake.isOn {
                 Image(systemName: "cup.and.saucer.fill").foregroundStyle(theme.accentColor)
                     .help("Keep Awake is on")
-            }
-            if let b = stats.battery {
-                HStack(spacing: 3) {
-                    Text(verbatim: "\(b.percent)%").monospacedDigit()
-                    Image(systemName: b.isCharging ? "battery.100.bolt" : Self.batterySymbol(b.percent))
-                }
-                .accessibilityLabel("Battery \(b.percent) percent")
             }
             Button { AppActions.openSettings() } label: {
                 Image(systemName: "gearshape.fill").frame(width: 22, height: 22).contentShape(Rectangle())
@@ -106,16 +97,6 @@ private struct HeaderStatus: View {
         }
         .font(.system(size: 11, weight: .medium))
         .foregroundStyle(theme.foregroundColor.opacity(0.75))
-    }
-
-    static func batterySymbol(_ p: Int) -> String {
-        switch p {
-        case ..<13: "battery.0"
-        case ..<38: "battery.25"
-        case ..<63: "battery.50"
-        case ..<88: "battery.75"
-        default: "battery.100"
-        }
     }
 }
 

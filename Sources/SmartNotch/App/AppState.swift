@@ -30,7 +30,7 @@ enum HUDKind: Equatable {
 
 /// What the collapsed island shows beside the notch, highest priority first.
 enum CollapsedActivity: Equatable {
-    case none, hud, call, timer, media
+    case none, hud, charging, call, timer, media
 
     var wingWidth: CGFloat {
         switch self {
@@ -39,6 +39,7 @@ enum CollapsedActivity: Equatable {
         case .timer: 56
         case .call: 64
         case .hud: 76
+        case .charging: 92
         }
     }
 }
@@ -62,13 +63,17 @@ final class AppState: ObservableObject {
     let mediaKeys = MediaKeyTap()
     let themes = ThemeStore()
     let updates = UpdateChecker()
+    let power = PowerMonitor()
 
     @Published var activeTab: NotchTab = .media { didSet { visibilityChanged() } }
     @Published private(set) var isExpanded = false
     @Published private(set) var hud: HUDKind?
+    /// Set for a few seconds after a charger is connected (iPhone-style charging animation).
+    @Published private(set) var chargingFlash: BatteryInfo?
     @Published private(set) var activity: CollapsedActivity = .none
 
     private var hudHide: DispatchWorkItem?
+    private var chargingHide: DispatchWorkItem?
     private var bag = Set<AnyCancellable>()
 
     func start() {
@@ -93,6 +98,12 @@ final class AppState: ObservableObject {
         mediaKeys.volume = volume
         mediaKeys.onHUD = { [weak self] kind in self?.showHUD(kind) }
         shelf.startAutoClear()
+        power.onPluggedIn = { [weak self] info in
+            log.info("Charger connected (\(info.percent, privacy: .public)%)")
+            guard let self, self.settings.chargingAnimation else { return }
+            self.showCharging(info)
+        }
+        power.start()
 
         // Recompute the collapsed activity whenever an input changes. Hop async so the new value is set.
         let triggers: [AnyPublisher<Void, Never>] = [
@@ -101,6 +112,7 @@ final class AppState: ObservableObject {
             timers.$finished.map { _ in () }.eraseToAnyPublisher(),
             call.$isInCall.map { _ in () }.eraseToAnyPublisher(),
             $hud.map { _ in () }.eraseToAnyPublisher(),
+            $chargingFlash.map { _ in () }.eraseToAnyPublisher(),
             s.$showWings.map { _ in () }.eraseToAnyPublisher(),
             s.$mediaEnabled.map { _ in () }.eraseToAnyPublisher(),
         ]
@@ -129,7 +141,6 @@ final class AppState: ObservableObject {
     private func visibilityChanged() {
         stats.setActive(isExpanded && activeTab == .utilities)
         camera.setActive(isExpanded && activeTab == .mirror)
-        if isExpanded { stats.refreshBattery() }
     }
 
     func showHUD(_ kind: HUDKind) {
@@ -140,9 +151,18 @@ final class AppState: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6, execute: work)
     }
 
+    func showCharging(_ info: BatteryInfo) {
+        chargingFlash = info
+        chargingHide?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.chargingFlash = nil }
+        chargingHide = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5, execute: work)
+    }
+
     func recomputeActivity() {
         let next: CollapsedActivity
         if hud != nil { next = .hud }
+        else if chargingFlash != nil { next = .charging }
         else if !settings.showWings { next = .none }
         else if call.isInCall { next = .call }
         else if !timers.timers.isEmpty || timers.finished != nil { next = .timer }

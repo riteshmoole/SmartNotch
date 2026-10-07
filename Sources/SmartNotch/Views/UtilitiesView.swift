@@ -17,9 +17,6 @@ struct UtilitiesView: View {
                 StatTile(symbol: "memorychip", title: "Memory",
                          value: stats.memUsed.map { String(format: "%.1f / %.0f GB", $0 / 1_073_741_824, stats.memTotal / 1_073_741_824) } ?? "—",
                          fraction: stats.memUsed.map { $0 / stats.memTotal }, tint: theme.accentColor)
-                StatTile(symbol: stats.battery?.isCharging == true ? "battery.100.bolt" : "battery.75", title: "Battery",
-                         value: stats.battery.map { "\($0.percent)%\($0.onAC ? " · AC" : "")" } ?? "—",
-                         fraction: stats.battery.map { Double($0.percent) / 100 }, tint: .green)
                 StatTile(symbol: stats.wifi?.isOn == false ? "wifi.slash" : "wifi", title: "Wi-Fi",
                          value: wifiText, fraction: stats.wifi.map { Double($0.bars) / 3 }, tint: theme.accentColor)
             }
