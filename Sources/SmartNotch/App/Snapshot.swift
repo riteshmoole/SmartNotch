@@ -67,13 +67,18 @@ enum Snapshot {
         settle()
         shoot(vm, state, dir.appendingPathComponent("wings-timer.png"), crop: wingCrop)
 
-        state.showCharging(BatteryInfo(percent: 72, isCharging: true, onAC: true))
+        state.showCharging(PowerFlash(battery: BatteryInfo(percent: 72, isCharging: true, onAC: true), pluggedIn: true))
         state.recomputeActivity()
         RunLoop.main.run(until: Date().addingTimeInterval(0.2))
         shoot(vm, state, dir.appendingPathComponent("wings-charging-start.png"), crop: g.collapsedRect(wing: CollapsedActivity.charging.wingWidth).insetBy(dx: -24, dy: -16))
         RunLoop.main.run(until: Date().addingTimeInterval(0.8))
         shoot(vm, state, dir.appendingPathComponent("wings-charging.png"), crop: g.collapsedRect(wing: CollapsedActivity.charging.wingWidth).insetBy(dx: -24, dy: -16))
-        RunLoop.main.run(until: Date().addingTimeInterval(3.2)) // let the flash end
+        RunLoop.main.run(until: Date().addingTimeInterval(2.6)) // let the flash end
+        state.showCharging(PowerFlash(battery: BatteryInfo(percent: 72, isCharging: false, onAC: false), pluggedIn: false))
+        state.recomputeActivity()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.6))
+        shoot(vm, state, dir.appendingPathComponent("wings-unplugged.png"), crop: g.collapsedRect(wing: CollapsedActivity.charging.wingWidth).insetBy(dx: -24, dy: -16))
+        RunLoop.main.run(until: Date().addingTimeInterval(1.9))
 
         state.showHUD(.volume(level: 0.56, muted: false))
         state.recomputeActivity()

@@ -46,7 +46,7 @@ private struct GeneralSettings: View {
                 Toggle("Show a floating pill on screens without a notch", isOn: $settings.showPillOnNotchless)
                 Toggle("Use the floating pill on every screen (also notched ones)", isOn: $settings.forcePill)
                 Toggle("Show live activities beside the notch (music, timers, calls)", isOn: $settings.showWings)
-                Toggle("Play the charging animation when you plug in", isOn: $settings.chargingAnimation)
+                Toggle("Show an animation when you plug in or unplug the charger", isOn: $settings.chargingAnimation)
                 Toggle("Hide SmartNotch from screen sharing and recordings", isOn: $settings.hideFromScreenShare)
             }
             Section("System") {

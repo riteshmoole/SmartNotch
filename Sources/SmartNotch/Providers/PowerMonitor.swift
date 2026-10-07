@@ -8,12 +8,12 @@ struct BatteryInfo: Equatable {
 }
 
 /// Watches the power source through IOKit's change notification (event-driven, no polling) and
-/// reports the moment a charger is connected, for the charging animation.
+/// reports the moment a charger is connected or disconnected, for the charging animations.
 @MainActor
 final class PowerMonitor: ObservableObject {
     @Published private(set) var battery: BatteryInfo?
-    /// Called on a battery → AC transition. Not called at launch.
-    var onPluggedIn: ((BatteryInfo) -> Void)?
+    /// Called on a battery ↔ AC transition (true = plugged in). Not called at launch.
+    var onPowerSourceChanged: ((BatteryInfo, _ pluggedIn: Bool) -> Void)?
 
     private var source: CFRunLoopSource?
 
@@ -35,7 +35,7 @@ final class PowerMonitor: ObservableObject {
         let old = battery
         let new = Self.read()
         battery = new
-        if let new, let old, new.onAC, !old.onAC { onPluggedIn?(new) }
+        if let new, let old, new.onAC != old.onAC { onPowerSourceChanged?(new, new.onAC) }
     }
 
     /// Internal battery only; nil on desktops.

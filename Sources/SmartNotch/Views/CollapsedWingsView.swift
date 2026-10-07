@@ -29,7 +29,7 @@ struct CollapsedWingsView: View {
                     .font(.system(size: 13, weight: .semibold))
             }
         case .charging:
-            Text("Charging")
+            Text(app.chargingFlash?.pluggedIn == false ? "Unplugged" : "Charging")
                 .foregroundStyle(.white)
                 .lineLimit(1)
                 .fixedSize()
@@ -64,12 +64,14 @@ struct CollapsedWingsView: View {
                     .frame(width: 46, height: 5)
             }
         case .charging:
-            if let b = app.chargingFlash {
+            if let f = app.chargingFlash {
                 HStack(spacing: 5) {
-                    Text(verbatim: "\(b.percent)%").monospacedDigit().foregroundStyle(ChargingBattery.green)
-                    ChargingBattery(percent: b.percent).frame(width: 27, height: 13)
+                    Text(verbatim: "\(f.battery.percent)%").monospacedDigit()
+                        .foregroundStyle(ChargingBattery.tint(percent: f.battery.percent, charging: f.pluggedIn))
+                    ChargingBattery(percent: f.battery.percent, charging: f.pluggedIn).frame(width: 27, height: 13)
                 }
                 .fixedSize()
+                .id(f.pluggedIn) // restart the fill animation if plug/unplug happen back to back
             }
         case .call:
             Text(verbatim: call.appName ?? "Call").lineLimit(1).minimumScaleFactor(0.7).foregroundStyle(.green)
@@ -96,11 +98,18 @@ struct CollapsedWingsView: View {
     }
 }
 
-/// Battery glyph that fills up to the charge level with a pulsing bolt, like the iPhone's
-/// Dynamic Island charging indicator. Animates once on appear (shortened when Reduce Motion is on).
+/// Battery glyph that fills up to the charge level, like the iPhone's Dynamic Island charging
+/// indicator. Plugged in: green fill plus a pulsing bolt. Unplugged: white (red when low) with no bolt.
+/// Animates once on appear (shortened when Reduce Motion is on).
 struct ChargingBattery: View {
     static let green = Color(red: 0.2, green: 0.84, blue: 0.29)
+    static let red = Color(red: 1, green: 0.27, blue: 0.23)
     let percent: Int
+    var charging = true
+
+    static func tint(percent: Int, charging: Bool) -> Color {
+        charging ? green : (percent <= 20 ? red : .white)
+    }
     @ViewState private var fill: Double = 0
     @ViewState private var pulse = false
 
@@ -113,16 +122,18 @@ struct ChargingBattery: View {
                     .stroke(.white.opacity(0.45), lineWidth: 1)
                     .frame(width: bodyW)
                 RoundedRectangle(cornerRadius: 2, style: .continuous)
-                    .fill(Self.green)
+                    .fill(Self.tint(percent: percent, charging: charging))
                     .frame(width: max(2, (bodyW - 4) * fill))
                     .padding(.leading, 2)
                     .padding(.vertical, 2)
-                Image(systemName: "bolt.fill")
-                    .font(.system(size: geo.size.height * 0.7, weight: .heavy))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.5), radius: 1)
-                    .scaleEffect(pulse ? 1.12 : 0.9)
-                    .frame(width: bodyW)
+                if charging {
+                    Image(systemName: "bolt.fill")
+                        .font(.system(size: geo.size.height * 0.7, weight: .heavy))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(0.5), radius: 1)
+                        .scaleEffect(pulse ? 1.12 : 0.9)
+                        .frame(width: bodyW)
+                }
                 RoundedRectangle(cornerRadius: 1)
                     .fill(.white.opacity(0.45))
                     .frame(width: 2, height: geo.size.height * 0.4)
@@ -131,14 +142,14 @@ struct ChargingBattery: View {
             .frame(height: geo.size.height)
         }
         .onAppear {
-            withAnimation(.easeOut(duration: reduceMotion ? 0.01 : 0.9).delay(reduceMotion ? 0 : 0.15)) {
+            withAnimation(.easeOut(duration: reduceMotion ? 0.01 : 0.45).delay(reduceMotion ? 0 : 0.05)) {
                 fill = Double(max(4, min(100, percent))) / 100
             }
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 0.55).repeatCount(5, autoreverses: true)) { pulse = true }
+            guard !reduceMotion, charging else { return }
+            withAnimation(.easeInOut(duration: 0.35).repeatCount(5, autoreverses: true)) { pulse = true }
         }
         .accessibilityElement()
-        .accessibilityLabel("Charging, \(percent) percent")
+        .accessibilityLabel("\(charging ? "Charging" : "On battery"), \(percent) percent")
     }
 }
 

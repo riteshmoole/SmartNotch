@@ -56,7 +56,9 @@ struct NotchRootView: View {
     }
 
     private var glowColor: Color {
-        if !expanded && app.activity == .charging { return ChargingBattery.green.opacity(0.55) }
+        if !expanded && app.activity == .charging {
+            return app.chargingFlash?.pluggedIn == false ? .clear : ChargingBattery.green.opacity(0.55)
+        }
         guard expanded else { return .clear }
         if settings.glowEnabled && theme.glow { return theme.glowSwiftColor.opacity(0.75) }
         return .black.opacity(0.5)

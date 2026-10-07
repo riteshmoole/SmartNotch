@@ -24,6 +24,13 @@ enum NotchTab: String, CaseIterable, Identifiable {
     }
 }
 
+struct PowerFlash: Equatable {
+    let battery: BatteryInfo
+    let pluggedIn: Bool
+    /// How long the live activity stays up. Unplug is a quieter, shorter beat.
+    var duration: TimeInterval { pluggedIn ? 2.5 : 1.8 }
+}
+
 enum HUDKind: Equatable {
     case volume(level: Float, muted: Bool)
 }
@@ -68,8 +75,8 @@ final class AppState: ObservableObject {
     @Published var activeTab: NotchTab = .media { didSet { visibilityChanged() } }
     @Published private(set) var isExpanded = false
     @Published private(set) var hud: HUDKind?
-    /// Set for a few seconds after a charger is connected (iPhone-style charging animation).
-    @Published private(set) var chargingFlash: BatteryInfo?
+    /// Set briefly after a charger is connected or disconnected (iPhone-style charging animation).
+    @Published private(set) var chargingFlash: PowerFlash?
     @Published private(set) var activity: CollapsedActivity = .none
 
     private var hudHide: DispatchWorkItem?
@@ -98,10 +105,10 @@ final class AppState: ObservableObject {
         mediaKeys.volume = volume
         mediaKeys.onHUD = { [weak self] kind in self?.showHUD(kind) }
         shelf.startAutoClear()
-        power.onPluggedIn = { [weak self] info in
-            log.info("Charger connected (\(info.percent, privacy: .public)%)")
+        power.onPowerSourceChanged = { [weak self] info, pluggedIn in
+            log.info("Charger \(pluggedIn ? "connected" : "disconnected", privacy: .public) (\(info.percent, privacy: .public)%)")
             guard let self, self.settings.chargingAnimation else { return }
-            self.showCharging(info)
+            self.showCharging(PowerFlash(battery: info, pluggedIn: pluggedIn))
         }
         power.start()
 
@@ -151,12 +158,12 @@ final class AppState: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6, execute: work)
     }
 
-    func showCharging(_ info: BatteryInfo) {
-        chargingFlash = info
+    func showCharging(_ flash: PowerFlash) {
+        chargingFlash = flash
         chargingHide?.cancel()
         let work = DispatchWorkItem { [weak self] in self?.chargingFlash = nil }
         chargingHide = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5, execute: work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + flash.duration, execute: work)
     }
 
     func recomputeActivity() {
