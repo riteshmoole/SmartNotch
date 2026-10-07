@@ -1,5 +1,6 @@
 #!/bin/bash
-# Packages build/SmartNotch.app into a drag-to-Applications DMG.
+# Packages build/SmartNotch.app into a drag-to-Applications DMG. Legacy: the main download is now
+# the ZIP (package-zip.sh). The DMG is still attached to releases so older links keep working.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"

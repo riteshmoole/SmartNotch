@@ -7,8 +7,8 @@ import AppKit
 final class UpdateChecker: ObservableObject {
     /// "owner/repo" on GitHub. Leave empty to make no network requests at all.
     static let repository = "riteshmoole/SmartNotch"
-    /// Always serves the newest release's DMG.
-    static let downloadURL = URL(string: "https://github.com/\(repository)/releases/latest/download/SmartNotch.dmg")!
+    /// Always serves the newest release's ZIP.
+    static let downloadURL = URL(string: "https://github.com/\(repository)/releases/latest/download/SmartNotch.zip")!
 
     @Published private(set) var latestVersion: String?
     @Published private(set) var releaseURL: URL?

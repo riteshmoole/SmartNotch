@@ -122,7 +122,7 @@
     <h1>Your notch,<br>but useful.</h1>
     <p class="tag">SmartNotch turns the MacBook notch into a Dynamic Island-style hub with music controls, a file shelf, clipboard history and quick tools. Free, private and open source.</p>
     <div class="cta">
-      <a class="btn" id="download" href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg">
+      <a class="btn" id="download" href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
         Download for Mac
       </a>
@@ -172,9 +172,9 @@
     <h2>Install in a minute</h2>
     <p class="lead">SmartNotch is a free student project, so it isn't registered with Apple's paid developer program. macOS asks you to confirm once. Here's how:</p>
     <ol class="steps">
-      <li><b>Download</b> SmartNotch.dmg and open it.</li>
-      <li><b>Drag SmartNotch into Applications.</b></li>
-      <li><b>Open SmartNotch.</b> macOS says it can't verify the app. Click <b>Done</b>. Don't move it to the Trash.</li>
+      <li><b>Download</b> SmartNotch.zip. Safari unzips it for you. In other browsers, double-click the ZIP in Downloads.</li>
+      <li><b>Drag SmartNotch from Downloads into Applications.</b></li>
+      <li><b>Open SmartNotch</b> from Applications. macOS says it can't verify the app. Click <b>Done</b>. Don't move it to the Trash.</li>
       <li>Open <b>System Settings → Privacy &amp; Security</b>, scroll down to <b>Security</b>, and click <b>Open Anyway</b> next to "SmartNotch was blocked". Confirm with Touch ID or your password.</li>
     </ol>
     <p class="note">That's it. After that it opens like any other app. Look for the icon in your menu bar. The full source code is <a href="https://github.com/riteshmoole/SmartNotch">on GitHub</a> if you'd like to check it first.</p>
@@ -204,11 +204,12 @@
   <section id="faq">
     <h2>Questions</h2>
     <details><summary>Does it work on my Mac?</summary><p>Any Mac with Apple Silicon (M1 or newer) running macOS 14 Sonoma or later. Best on MacBooks with a notch. Other screens get a floating pill.</p></details>
+    <details><summary>macOS says "SmartNotch.dmg" Not Opened. What now?</summary><p>That's the old download format. macOS blocks it before it even opens. <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">Download the ZIP</a> instead and follow the steps above. If you'd rather keep the DMG: click Done, then go to System Settings → Privacy &amp; Security and click Open Anyway, once for the DMG and once more for the app.</p></details>
     <details><summary>Why does macOS warn me when I open it?</summary><p>Apple's warning appears for any app that isn't notarized through its $99/year developer program. SmartNotch is free and open source, and you confirm it once in Privacy &amp; Security.</p></details>
     <details><summary>Will Now Playing always work?</summary><p>It uses a workaround to read what's playing, and a future macOS update could break it. If that happens, SmartNotch falls back to Music and Spotify and tells you, instead of showing an empty panel.</p></details>
     <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy.</p></details>
     <details><summary>How do I uninstall it?</summary><p>Quit it from the menu bar icon and drag SmartNotch from Applications to the Trash. Optionally delete <code>~/Library/Application Support/SmartNotch</code>.</p></details>
-    <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, download, quit SmartNotch, and drag the new version into Applications (choose Replace). The <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg">download link</a> always serves the newest version too.</p></details>
+    <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, then Download, quit SmartNotch, and drag the new SmartNotch from Downloads into Applications (choose Replace). The <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">download link</a> always serves the newest version too.</p></details>
   </section>
 </main>
 

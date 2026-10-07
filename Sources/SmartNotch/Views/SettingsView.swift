@@ -238,7 +238,7 @@ private struct UpdateCard: View {
             if let summary = updates.releaseSummary {
                 Text(verbatim: summary).font(.callout).fixedSize(horizontal: false, vertical: true)
             }
-            Text("To update: download it, quit SmartNotch, then drag the new app into Applications and choose Replace. Your settings and permissions carry over.")
+            Text("To update: click Download, quit SmartNotch, then drag the new SmartNotch from Downloads into Applications and choose Replace. Your settings and permissions carry over.")
                 .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             HStack {
                 Button("Download") { NSWorkspace.shared.open(UpdateChecker.downloadURL) }

@@ -2,7 +2,7 @@
 
 <img src="docs/icon.png" width="96" align="right" alt="SmartNotch icon">
 
-### [⬇️ Download SmartNotch for Mac](https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg) · [Website](https://riteshmoole.github.io/SmartNotch/)
+### [⬇️ Download SmartNotch for Mac](https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip) · [Website](https://riteshmoole.github.io/SmartNotch/)
 
 **Your MacBook notch, but useful.** SmartNotch turns the notch into a Dynamic Island-style surface. Hover, click, or press **⌃⌥Space** and it opens to show:
 
@@ -26,19 +26,19 @@ Free, open source (MIT), and private: **no accounts, no analytics, nothing leave
 
 **Requirements:** a Mac with Apple Silicon (M1 or newer), macOS 14 Sonoma or later.
 
-1. [Download SmartNotch.dmg](https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.dmg) and open it.
-2. Drag **SmartNotch** into **Applications**.
-3. Open SmartNotch. macOS will say it can't verify the app. Click **Done**.
+1. [Download SmartNotch.zip](https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip). Safari unzips it for you. In other browsers, double-click the ZIP in Downloads.
+2. Drag **SmartNotch** from Downloads into **Applications**.
+3. Open SmartNotch from Applications. macOS will say it can't verify the app. Click **Done** (not Move to Trash).
 4. Go to **System Settings → Privacy & Security**, scroll to **Security**, and click **Open Anyway** next to "SmartNotch was blocked". Confirm with Touch ID or your password.
 
-You only do this once. *Why the warning?* SmartNotch is a free project that isn't signed with a paid ($99/yr) Apple Developer certificate, so macOS can't vouch for it. The full source is right here if you want to check it or build it yourself.
+You only do this once. *Got "SmartNotch.dmg Not Opened"?* That's the old download format, which macOS blocks before it opens. Download the ZIP above instead. *Why the warning?* SmartNotch is a free project that isn't signed with a paid ($99/yr) Apple Developer certificate, so macOS can't vouch for it. The full source is right here if you want to check it or build it yourself.
 
 ## Updating
 
 SmartNotch checks GitHub for a new version when it starts and once a day. When one is out, a red dot appears on the ⚙️ gear in the open notch, and the menu bar icon gets an **Update Available** item. Click either to see what's new, then:
 
 1. Click **Download**, and quit SmartNotch from its menu bar icon.
-2. Open the new DMG and drag **SmartNotch** into **Applications**. Choose **Replace**.
+2. Drag the new **SmartNotch** from Downloads into **Applications**. Choose **Replace**.
 3. Open SmartNotch. Your settings and permissions carry over. If macOS asks again, use **Open Anyway** as above.
 
 Prefer no network at all? Turn off **Settings → General → Check for updates once a day**.
@@ -79,14 +79,14 @@ Needs only Apple's Command Line Tools (`xcode-select --install`). Full Xcode isn
 ```sh
 ./Scripts/build-app.sh          # → build/SmartNotch.app
 open build/SmartNotch.app
-./Scripts/package-dmg.sh        # → build/SmartNotch-<version>.dmg
+./Scripts/package-zip.sh        # → build/SmartNotch-<version>.zip (the download)
 ```
 
 ```
 Sources/SmartNotch/   the app (App, Notch, Views, Providers, Theme)
 Resources/            Info.plist, built-in themes, app icon
 ThirdParty/           vendored mediaremote-adapter (BSD-3)
-Scripts/              build, icon, and DMG packaging scripts
+Scripts/              build, icon, and packaging scripts
 docs/                 the download page (GitHub Pages)
 ```
 
