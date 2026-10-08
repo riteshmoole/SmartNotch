@@ -56,7 +56,7 @@ struct NowPlayingView: View {
 
     private func artwork(_ t: NowPlayingTrack) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 14, style: .continuous).fill(.white.opacity(0.08))
+            RoundedRectangle(cornerRadius: 14, style: .continuous).fill(theme.foregroundColor.opacity(0.08))
             if let art = t.artwork {
                 Image(nsImage: art).resizable().aspectRatio(contentMode: .fill)
             } else {

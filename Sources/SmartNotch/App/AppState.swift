@@ -94,7 +94,8 @@ final class AppState: ObservableObject {
         s.$callActivityEnabled.removeDuplicates().sink { [weak self] on in
             on ? self?.call.start() : self?.call.stop()
         }.store(in: &bag)
-        s.$hudReplacement.removeDuplicates().sink { [weak self] on in
+        // On by default, but its Accessibility prompt waits until the welcome screen is dismissed.
+        s.$hudReplacement.combineLatest(s.$hasCompletedOnboarding).map { $0 && $1 }.removeDuplicates().sink { [weak self] on in
             self?.mediaKeys.setEnabled(on)
         }.store(in: &bag)
         s.$checkForUpdates.removeDuplicates().sink { [weak self] on in

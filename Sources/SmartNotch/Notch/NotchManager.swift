@@ -77,7 +77,7 @@ final class NotchManager {
         if let tab { state.activeTab = tab }
         expanded = c
         pointerHasEntered = c.expandedRect.contains(NSEvent.mouseLocation)
-        c.setExpanded(true)
+        c.setExpanded(true, takeFocus: state.themes.current.isGlass)
         state.setExpanded(true)
     }
 

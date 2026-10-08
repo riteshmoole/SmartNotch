@@ -21,7 +21,7 @@ struct SettingsView: View {
             GeneralSettings(settings: settings, updates: state.updates)
                 .tabItem { Label("General", systemImage: "gearshape") }
                 .tag(SettingsTab.general)
-            ModuleSettings(settings: settings, mediaKeys: state.mediaKeys, nowPlaying: state.nowPlaying, clipboard: state.clipboard)
+            ModuleSettings(settings: settings, mediaKeys: state.mediaKeys, nowPlaying: state.nowPlaying, call: state.call, clipboard: state.clipboard)
                 .tabItem { Label("Modules", systemImage: "square.grid.2x2") }
                 .tag(SettingsTab.modules)
             AppearanceSettings(settings: settings, themes: themes)
@@ -87,6 +87,7 @@ private struct ModuleSettings: View {
     @ObservedObject var settings: Settings
     @ObservedObject var mediaKeys: MediaKeyTap
     @ObservedObject var nowPlaying: NowPlayingProvider
+    @ObservedObject var call: CallActivityMonitor
     let clipboard: ClipboardMonitor
     @ViewState private var excludedText = ""
 
@@ -122,11 +123,14 @@ private struct ModuleSettings: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section("Calls") {
-                Toggle("Show “In a call” when Zoom, FaceTime, Teams… use your mic or camera", isOn: $settings.callActivityEnabled)
-                Text("Uses only whether the mic/camera is busy. SmartNotch never sees who you're talking to.")
+                Toggle("Show “In a call” when Zoom, FaceTime, Phone… use your mic or camera", isOn: $settings.callActivityEnabled)
+                Text("Shows once a call is answered (macOS doesn't tell apps about ringing calls). Works with \(CallActivityMonitor.knownAppNames). Uses only whether the mic/camera is busy. SmartNotch never sees who you're talking to.")
                     .font(.caption).foregroundStyle(.secondary)
+                if settings.callActivityEnabled {
+                    Text(callStatus).font(.caption).foregroundStyle(call.isInCall ? .green : .secondary)
+                }
             }
-            Section("Volume HUD (beta)") {
+            Section("Volume HUD") {
                 Toggle("Replace the macOS volume overlay with SmartNotch's", isOn: $settings.hudReplacement)
                 if settings.hudReplacement && !mediaKeys.isTrusted {
                     HStack {
@@ -141,6 +145,13 @@ private struct ModuleSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+
+    /// Live status, so "it doesn't show my call" can be narrowed down to the app or the mic.
+    private var callStatus: String {
+        guard let app = call.appName else { return "Status: none of the apps above is open." }
+        let devices = "mic \(call.micOn ? "in use" : "idle"), camera \(call.cameraOn ? "in use" : "idle")"
+        return call.isInCall ? "Status: in a call on \(app) (\(devices))." : "Status: \(app) is open, \(devices). Waiting for a call."
     }
 
     private var sourceDescription: String {
@@ -178,6 +189,19 @@ private struct AppearanceSettings: View {
                     }
                 }
                 Toggle("Glow around the open notch (themes that support it)", isOn: $settings.glowEnabled)
+                if themes.current.isGlass {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Slider(value: $settings.glassFrost, in: 0...1) {
+                            Text("Glass clarity")
+                        } minimumValueLabel: {
+                            Text("Clear").font(.caption)
+                        } maximumValueLabel: {
+                            Text("Frosted").font(.caption)
+                        }
+                        Text("Clearer glass shows more of what's behind the notch, but text can be harder to read over busy windows. Hover the notch to preview. While open, glass themes hold keyboard focus (macOS only draws clear glass in the focused window); moving away or pressing Esc gives it back.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
             }
             Section("Custom themes") {
                 Text("Themes are small JSON files. Drop your own into the folder below, then click Reload.")

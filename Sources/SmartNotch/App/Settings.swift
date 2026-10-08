@@ -28,6 +28,8 @@ final class Settings: ObservableObject {
     // Appearance
     @Published var themeID: String { didSet { d.set(themeID, forKey: "themeID") } }
     @Published var glowEnabled: Bool { didSet { d.set(glowEnabled, forKey: "glowEnabled") } }
+    /// Liquid Glass themes: 0 = as clear as possible, 1 = heavily frosted.
+    @Published var glassFrost: Double { didSet { d.set(glassFrost, forKey: "glassFrost") } }
 
     // Misc
     @Published var checkForUpdates: Bool { didSet { d.set(checkForUpdates, forKey: "checkForUpdates") } }
@@ -44,8 +46,8 @@ final class Settings: ObservableObject {
             "showWings": true, "hideFromScreenShare": true,
             "mediaEnabled": true, "shelfEnabled": true, "shelfAutoClearHours": 24,
             "clipboardEnabled": true, "clipboardPersist": false, "clipboardExcludedApps": Self.defaultExcludedApps,
-            "callActivityEnabled": true, "hudReplacement": false, "chargingAnimation": true,
-            "themeID": "midnight", "glowEnabled": true,
+            "callActivityEnabled": true, "hudReplacement": true, "chargingAnimation": true,
+            "themeID": "midnight", "glowEnabled": true, "glassFrost": 0.6,
             "checkForUpdates": true, "hasCompletedOnboarding": false,
         ])
         hoverToOpen = d.bool(forKey: "hoverToOpen")
@@ -65,6 +67,7 @@ final class Settings: ObservableObject {
         chargingAnimation = d.bool(forKey: "chargingAnimation")
         themeID = d.string(forKey: "themeID") ?? "midnight"
         glowEnabled = d.bool(forKey: "glowEnabled")
+        glassFrost = d.double(forKey: "glassFrost")
         checkForUpdates = d.bool(forKey: "checkForUpdates")
         hasCompletedOnboarding = d.bool(forKey: "hasCompletedOnboarding")
     }

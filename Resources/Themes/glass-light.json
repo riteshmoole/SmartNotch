@@ -1,0 +1,11 @@
+{
+  "id": "glass-light",
+  "name": "Liquid Glass Light",
+  "material": "glassLight",
+  "background": "#FFFFFF",
+  "foreground": "#000000",
+  "accent": "#007AFF",
+  "glow": false,
+  "glowColor": "#FFFFFF",
+  "glowRadius": 0
+}

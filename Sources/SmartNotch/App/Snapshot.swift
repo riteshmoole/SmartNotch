@@ -46,11 +46,12 @@ enum Snapshot {
         guard let screen = NSScreen.main else { return }
         let g = NotchGeometry.make(for: screen, forcePill: false)
         seedDemoData(state)
+        state.themes.select(Theme.midnight.id) // glass can't render offscreen
 
         let vm = NotchViewModel(geometry: g)
         vm.isExpanded = true
         for tab in [NotchTab.media, .shelf, .clipboard, .utilities] {
-            if tab == .utilities { state.timers.start(minutes: 10) }
+            if tab == .media { state.timers.start(minutes: 10) }
             state.activeTab = tab
             shoot(vm, state, dir.appendingPathComponent("\(tab.rawValue).png"), crop: g.expandedRect.insetBy(dx: -14, dy: -14))
         }

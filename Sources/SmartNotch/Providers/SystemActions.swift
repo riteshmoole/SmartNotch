@@ -26,13 +26,6 @@ final class KeepAwake: ObservableObject {
 enum SystemActions {
     static let focusShortcutName = "SmartNotch Focus"
 
-    /// Puts the display to sleep. It locks if "Require password immediately" is set (the macOS default).
-    @MainActor
-    static func lockScreen() {
-        AppActions.collapse()
-        Task.detached { runProcess("/usr/bin/pmset", ["displaysleepnow"]) }
-    }
-
     /// No public API toggles Focus. We run a Shortcut the user creates once.
     /// Returns false when the Shortcut doesn't exist.
     static func toggleFocus() async -> Bool {

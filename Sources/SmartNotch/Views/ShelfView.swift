@@ -77,7 +77,7 @@ private struct ShelfTile: View {
                 .frame(width: 76)
         }
         .padding(6)
-        .background(RoundedRectangle(cornerRadius: 10).fill(.white.opacity(hovering ? 0.1 : 0)))
+        .background(RoundedRectangle(cornerRadius: 10).fill(theme.foregroundColor.opacity(hovering ? 0.1 : 0)))
         // Drag, double-click and right-click are handled natively (see FileDragSource).
         .overlay(FileDragSource(item: item, shelf: shelf))
         .overlay(alignment: .topTrailing) {

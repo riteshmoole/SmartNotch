@@ -63,7 +63,7 @@ struct ClipboardView: View {
                     .font(.system(size: 9)).opacity(0.5)
             }
             .padding(.horizontal, 8).padding(.vertical, 5)
-            .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(copiedID == item.id ? 0.18 : 0.06)))
+            .background(RoundedRectangle(cornerRadius: 8).fill(theme.foregroundColor.opacity(copiedID == item.id ? 0.18 : 0.06)))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

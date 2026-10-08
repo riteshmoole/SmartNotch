@@ -156,10 +156,11 @@ struct ChargingBattery: View {
 struct LevelBar: View {
     var value: Double
     var tint: Color
+    @Environment(\.notchTheme) private var theme
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
-                Capsule().fill(.white.opacity(0.2))
+                Capsule().fill(theme.foregroundColor.opacity(0.2))
                 Capsule().fill(tint).frame(width: geo.size.width * max(0, min(1, value)))
             }
         }

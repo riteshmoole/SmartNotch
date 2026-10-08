@@ -12,14 +12,43 @@ struct Theme: Codable, Identifiable, Equatable {
     let glow: Bool
     let glowColor: String
     let glowRadius: Double
+    /// "solid" (default when missing), "glassLight" or "glassDark". Glass themes draw the open
+    /// island with Liquid Glass, tinted with `background`.
+    var material: String?
 
     var backgroundColor: Color { Color(hex: background) }
     var foregroundColor: Color { Color(hex: foreground) }
     var accentColor: Color { Color(hex: accent) }
     var glowSwiftColor: Color { Color(hex: glowColor) }
 
+    var isGlass: Bool { material == "glassLight" || material == "glassDark" }
+    var isLight: Bool { material == "glassLight" }
+    var colorScheme: ColorScheme { isLight ? .light : .dark }
+    /// Text and icons on accent-filled (active) controls.
+    var onAccentColor: Color { .black }
+
+    /// The collapsed island sits around the black hardware notch, so it is always solid black
+    /// with white text, whatever the open island looks like.
+    var collapsed: Theme {
+        guard isGlass else { return self }
+        return Theme(id: id, name: name, background: "#000000", foreground: "#FFFFFF", accent: accent,
+                     glow: glow, glowColor: glowColor, glowRadius: glowRadius)
+    }
+
     static let midnight = Theme(id: "midnight", name: "Midnight", background: "#000000", foreground: "#FFFFFF",
                                 accent: "#0A84FF", glow: false, glowColor: "#0A84FF", glowRadius: 0)
+}
+
+private struct NotchThemeKey: EnvironmentKey {
+    static let defaultValue = Theme.midnight
+}
+
+extension EnvironmentValues {
+    /// The theme of the island the view is drawn in (set by NotchRootView).
+    var notchTheme: Theme {
+        get { self[NotchThemeKey.self] }
+        set { self[NotchThemeKey.self] = newValue }
+    }
 }
 
 @MainActor
@@ -54,7 +83,8 @@ final class ThemeStore: ObservableObject {
         select(Settings.shared.themeID)
     }
 
-    private func select(_ id: String) {
+    /// Also used by `--snapshot --demo` to render in the default look without saving a setting.
+    func select(_ id: String) {
         current = themes.first { $0.id == id } ?? .midnight
     }
 }

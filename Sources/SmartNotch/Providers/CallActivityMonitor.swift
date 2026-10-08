@@ -19,13 +19,22 @@ final class CallActivityMonitor: ObservableObject {
     static let knownApps: [String: String] = [
         "us.zoom.xos": "Zoom",
         "com.apple.FaceTime": "FaceTime",
+        "com.apple.mobilephone": "Phone", // iPhone calls relayed to the Mac (macOS 26+)
         "com.microsoft.teams2": "Teams",
         "com.microsoft.teams": "Teams",
         "com.cisco.webexmeetingsapp": "Webex",
         "Cisco-Systems.Spark": "Webex",
         "com.tinyspeck.slackmacgap": "Slack",
         "com.hnc.Discord": "Discord",
+        "net.whatsapp.WhatsApp": "WhatsApp",
+        "desktop.WhatsApp": "WhatsApp",
+        "ru.keepcoder.Telegram": "Telegram",
+        "org.telegram.desktop": "Telegram",
+        "org.whispersystems.signal-desktop": "Signal",
     ]
+
+    /// Names for the Settings explanation, e.g. "Discord, FaceTime, Phone…".
+    static var knownAppNames: String { Set(knownApps.values).sorted().joined(separator: ", ") }
 
     private var observers: [NSObjectProtocol] = []
     private var timer: Timer?

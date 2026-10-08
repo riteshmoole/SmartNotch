@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// First-run screen. Explains how to open the notch and which optional features need which
-/// permission. It asks for nothing. Every prompt waits until you use the feature that needs it.
+/// permission. Only the volume HUD asks right away (after "Get Started"); other prompts wait until
+/// you use the feature that needs them.
 struct OnboardingView: View {
     let onDone: () -> Void
 
@@ -24,10 +25,10 @@ struct OnboardingView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Permissions: only when you need them").font(.headline)
-                Text("SmartNotch doesn't ask for anything now. macOS will ask the first time you use:")
+                Text("macOS will ask when a feature first needs a permission:")
                     .font(.callout).foregroundStyle(.secondary)
                 perm("camera", "Mirror tab", "Camera")
-                perm("speaker.wave.2", "Volume HUD (beta, off by default)", "Accessibility")
+                perm("speaker.wave.2", "Volume HUD (asks after you click Get Started)", "Accessibility")
                 perm("music.note", "Music/Spotify fallback (only if full media detection breaks)", "Automation")
                 Text("Never requested: location, Full Disk Access, screen recording. Nothing leaves your Mac.")
                     .font(.caption).foregroundStyle(.secondary)

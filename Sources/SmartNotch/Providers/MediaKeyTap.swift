@@ -1,7 +1,7 @@
 import AppKit
 import ApplicationServices
 
-/// HUD replacement (beta, off by default). An event tap consumes the volume keys, sets the volume
+/// HUD replacement (on by default). An event tap consumes the volume keys, sets the volume
 /// ourselves, and shows our HUD in the notch. Needs Accessibility: the TCC permission that lets
 /// an app watch or alter input meant for other apps. Testing verified the native HUD stays hidden.
 @MainActor

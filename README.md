@@ -6,15 +6,15 @@
 
 **Your MacBook notch, but useful.** SmartNotch turns the notch into a Dynamic Island-style surface. Hover, click, or press **⌃⌥Space** and it opens to show:
 
-- **Now Playing:** artwork, scrub bar, play/pause/skip, and volume for Music, Spotify, and browser video/audio
+- **Now Playing:** artwork, scrub bar, play/pause/skip, and volume for Music, Spotify, and browser video/audio, with Keep Awake, Focus, Mirror, and one-tap timers right underneath
 - **File Shelf:** drag files onto the notch to park them, drag them out anywhere, or AirDrop them
 - **Clipboard history:** recent text and images, with passwords skipped automatically
-- **Utilities:** CPU, memory, Wi-Fi, Keep Awake, Focus, Lock, and quick timers
+- **Utilities:** CPU, memory, and Wi-Fi at a glance
 - **Mirror:** a camera preview to check yourself before a call
-- **Live activities** beside the notch while it's closed: music playing, a timer counting down, or "In a call · Zoom"
+- **Live activities** beside the notch while it's closed: music playing, a timer counting down, or "In a call · Zoom" (once the call is answered; also FaceTime, Phone, Teams, WhatsApp and more)
 - **Charging animation:** plug in and the notch flashes "Charging" with your battery filling up in green. Unplug and it shows "Unplugged" with your current charge (turn it off in Settings)
-- **Volume HUD (beta):** replaces the macOS volume overlay with one in the notch
-- **Themes:** five built-in themes with optional glow, plus custom themes as simple JSON files
+- **Volume HUD:** replaces the macOS volume overlay with one in the notch (on by default; turn it off in Settings)
+- **Themes:** Liquid Glass Light and Liquid Glass Dark (Apple's glass look, from clear to frosted with a slider), five solid themes with optional glow, plus custom themes as simple JSON files
 
 <p align="center"><img src="docs/screenshots/media.png" width="640" alt="SmartNotch showing Now Playing"></p>
 
@@ -50,7 +50,7 @@ SmartNotch asks for nothing at first launch.
 | Feature | Permission | When it's asked |
 |---|---|---|
 | Mirror (camera preview) | Camera | First time you open the Mirror tab |
-| Volume HUD (beta, off by default) | Accessibility | When you turn it on in Settings |
+| Volume HUD (on by default) | Accessibility | Right after the welcome screen (say no to keep the macOS overlay) |
 | Music/Spotify fallback | Automation | Only if full media detection stops working on a future macOS |
 
 SmartNotch **never** asks for Location, Full Disk Access, or Screen Recording.

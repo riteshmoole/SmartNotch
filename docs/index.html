@@ -132,10 +132,10 @@
     <div class="stage">
       <div class="screen"><div class="menubar"></div><img id="shot" src="screenshots/media.png" alt="SmartNotch open, showing Now Playing with album art, scrub bar and playback controls" width="1252" height="500"></div>
       <div class="switch" role="group" aria-label="Choose a screenshot">
-        <button aria-pressed="true" data-src="media" data-alt="Now Playing with album art, scrub bar and controls">Now Playing</button>
+        <button aria-pressed="true" data-src="media" data-alt="Now Playing with album art, scrub bar and controls, plus Keep Awake, Focus, Mirror and timer buttons">Now Playing</button>
         <button aria-pressed="false" data-src="shelf" data-alt="File shelf holding five files with AirDrop and Clear buttons">File Shelf</button>
         <button aria-pressed="false" data-src="clipboard" data-alt="Clipboard history with recent text and an image">Clipboard</button>
-        <button aria-pressed="false" data-src="utilities" data-alt="Utilities: CPU, memory, Wi-Fi, Keep Awake, Focus, Lock, Mirror and timers">Utilities</button>
+        <button aria-pressed="false" data-src="utilities" data-alt="Utilities: CPU, memory and Wi-Fi">Utilities</button>
       </div>
     </div>
   </div>
@@ -149,9 +149,9 @@
       <div class="card"><span class="emoji">🎵</span><h3>Now Playing</h3><p>Artwork, scrubbing, play/pause/skip and volume for Music, Spotify and video in your browser.</p></div>
       <div class="card"><span class="emoji">📥</span><h3>File Shelf</h3><p>Drag files onto the notch to park them. Drag them out to any app or folder, or AirDrop them.</p></div>
       <div class="card"><span class="emoji">📋</span><h3>Clipboard history</h3><p>Your recent copies, text and images. Passwords from password managers are skipped automatically.</p></div>
-      <div class="card"><span class="emoji">⚡️</span><h3>Quick tools</h3><p>CPU, memory and Wi-Fi at a glance. Keep Awake, Focus, Lock and one-tap timers.</p></div>
+      <div class="card"><span class="emoji">⚡️</span><h3>Quick tools</h3><p>Keep Awake, Focus, Mirror and one-tap timers sit right under the player. CPU, memory and Wi-Fi are one tab over.</p></div>
       <div class="card"><span class="emoji">🪞</span><h3>Mirror</h3><p>A quick camera check before a call. It turns off the moment the notch closes.</p></div>
-      <div class="card"><span class="emoji">🎨</span><h3>Themes</h3><p>Five built-in looks with optional glow, or make your own with a tiny JSON file.</p></div>
+      <div class="card"><span class="emoji">🎨</span><h3>Themes</h3><p>Liquid Glass Light and Dark for Apple's glass look (slide from clear to frosted), five solid looks with optional glow, or make your own with a tiny JSON file.</p></div>
     </div>
   </section>
 
@@ -161,11 +161,11 @@
     <div class="wings">
       <div class="wing"><img src="screenshots/wings-media.png" alt="Collapsed notch with album art on the left and animated equalizer bars on the right"><span>Music playing</span></div>
       <div class="wing"><img src="screenshots/wings-timer.png" alt="Collapsed notch with a timer icon and a 25-minute countdown"><span>Timer</span></div>
-      <div class="wing"><img src="screenshots/wings-volume.png" alt="Collapsed notch showing a speaker icon and volume level bar"><span>Volume (beta)</span></div>
+      <div class="wing"><img src="screenshots/wings-volume.png" alt="Collapsed notch showing a speaker icon and volume level bar"><span>Volume</span></div>
       <div class="wing"><img src="screenshots/wings-charging.png" alt="Collapsed notch reading Charging, with 72% and a green battery filling up with a lightning bolt"><span>Plugged in</span></div>
       <div class="wing"><img src="screenshots/wings-unplugged.png" alt="Collapsed notch reading Unplugged, with 72% and a white battery icon"><span>Unplugged</span></div>
     </div>
-    <p class="note">No notch? On external displays and older Macs, SmartNotch shows a floating pill instead. It also shows "In a call" when Zoom, FaceTime or Teams is using your mic or camera.</p>
+    <p class="note">No notch? On external displays and older Macs, SmartNotch shows a floating pill instead. It also shows "In a call" when Zoom, FaceTime, Phone, Teams or WhatsApp is using your mic or camera.</p>
   </section>
 
   <section id="install">
@@ -195,7 +195,7 @@
       <tbody>
         <tr><td>Everything else</td><td>None</td><td>Never</td></tr>
         <tr><td>Mirror</td><td>Camera</td><td>First time you open the Mirror tab</td></tr>
-        <tr><td>Volume HUD (beta, off by default)</td><td>Accessibility</td><td>When you turn it on in Settings</td></tr>
+        <tr><td>Volume HUD (on by default)</td><td>Accessibility</td><td>Right after the welcome screen (say no to keep the macOS overlay)</td></tr>
         <tr><td>Music/Spotify fallback</td><td>Automation</td><td>Only if full media detection stops working after a macOS update</td></tr>
       </tbody>
     </table>
@@ -207,7 +207,7 @@
     <details><summary>macOS says "SmartNotch.dmg" Not Opened. What now?</summary><p>That's the old download format. macOS blocks it before it even opens. <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">Download the ZIP</a> instead and follow the steps above. If you'd rather keep the DMG: click Done, then go to System Settings → Privacy &amp; Security and click Open Anyway, once for the DMG and once more for the app.</p></details>
     <details><summary>Why does macOS warn me when I open it?</summary><p>Apple's warning appears for any app that isn't notarized through its $99/year developer program. SmartNotch is free and open source, and you confirm it once in Privacy &amp; Security.</p></details>
     <details><summary>Will Now Playing always work?</summary><p>It uses a workaround to read what's playing, and a future macOS update could break it. If that happens, SmartNotch falls back to Music and Spotify and tells you, instead of showing an empty panel.</p></details>
-    <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy.</p></details>
+    <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy, so it appears once you answer, not while the call is ringing.</p></details>
     <details><summary>How do I uninstall it?</summary><p>Quit it from the menu bar icon and drag SmartNotch from Applications to the Trash. Optionally delete <code>~/Library/Application Support/SmartNotch</code>.</p></details>
     <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, then Download, quit SmartNotch, and drag the new SmartNotch from Downloads into Applications (choose Replace). The <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">download link</a> always serves the newest version too.</p></details>
   </section>

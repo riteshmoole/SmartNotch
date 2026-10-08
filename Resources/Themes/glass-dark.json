@@ -1,0 +1,11 @@
+{
+  "id": "glass-dark",
+  "name": "Liquid Glass Dark",
+  "material": "glassDark",
+  "background": "#000000",
+  "foreground": "#FFFFFF",
+  "accent": "#0A84FF",
+  "glow": false,
+  "glowColor": "#000000",
+  "glowRadius": 0
+}

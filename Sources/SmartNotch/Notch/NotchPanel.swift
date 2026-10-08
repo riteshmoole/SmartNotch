@@ -23,6 +23,8 @@ final class NotchPanel: NSPanel {
 
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
+    // Esc closes the island while it holds keyboard focus (glass themes).
+    override func cancelOperation(_ sender: Any?) { AppActions.collapse() }
     // Borderless windows would otherwise be pushed below the menu bar.
     override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect { frameRect }
 }
@@ -58,10 +60,20 @@ final class NotchWindowController {
 
     var expandedRect: CGRect { geometry.expandedRect }
 
-    func setExpanded(_ expanded: Bool) {
+    func setExpanded(_ expanded: Bool, takeFocus: Bool = false) {
         vm.isExpanded = expanded
         panel.ignoresMouseEvents = !expanded
         if !expanded { vm.isDropTargeted = false }
+        // macOS draws Liquid Glass in its clear, refracting form only in the key window; anywhere
+        // else it falls back to a flat frost. So glass themes take focus while open. The panel is
+        // non-activating, so the frontmost app stays active, and re-ordering the panel on close
+        // hands keyboard focus straight back to it.
+        if expanded && takeFocus {
+            panel.makeKey()
+        } else if !expanded && panel.isKeyWindow {
+            panel.orderOut(nil)
+            panel.orderFrontRegardless()
+        }
     }
 
     func close() {

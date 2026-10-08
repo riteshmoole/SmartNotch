@@ -25,10 +25,15 @@ struct ExpandedView: View {
 
             Group {
                 switch app.activeTab {
-                case .media: NowPlayingView(np: app.nowPlaying, volume: app.volume, settings: app.settings, theme: theme)
+                case .media:
+                    VStack(spacing: 12) {
+                        NowPlayingView(np: app.nowPlaying, volume: app.volume, settings: app.settings, theme: theme)
+                            .frame(maxHeight: .infinity)
+                        QuickActionsRow(app: app, keepAwake: app.keepAwake, timers: app.timers, theme: theme)
+                    }
                 case .shelf: ShelfView(shelf: app.shelf, settings: app.settings, theme: theme)
                 case .clipboard: ClipboardView(clipboard: app.clipboard, settings: app.settings, theme: theme)
-                case .utilities: UtilitiesView(app: app, stats: app.stats, keepAwake: app.keepAwake, timers: app.timers, theme: theme)
+                case .utilities: UtilitiesView(app: app, stats: app.stats, settings: app.settings, theme: theme)
                 case .mirror: MirrorView(camera: app.camera, theme: theme)
                 }
             }
@@ -65,7 +70,7 @@ private struct TabBar: View {
                         .frame(width: 28, height: 24)
                         .background(
                             RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(app.activeTab == tab ? Color.white.opacity(0.16) : .clear)
+                                .fill(app.activeTab == tab ? theme.foregroundColor.opacity(0.16) : .clear)
                         )
                         .foregroundStyle(app.activeTab == tab ? theme.accentColor : theme.foregroundColor.opacity(0.7))
                         .contentShape(Rectangle())
@@ -97,7 +102,7 @@ private struct HeaderStatus: View {
                         if updates.updateAvailable {
                             Circle().fill(Color.red)
                                 .frame(width: 7, height: 7)
-                                .overlay(Circle().stroke(Color.black, lineWidth: 1.5))
+                                .overlay(Circle().stroke(theme.backgroundColor, lineWidth: 1.5))
                                 .offset(x: -5, y: 2)
                         }
                     }
@@ -116,15 +121,26 @@ struct PillButtonStyle: ButtonStyle {
     var tint: Color = .white
     var active = false
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 11, weight: .semibold))
-            .padding(.horizontal, 10).padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(active ? tint.opacity(0.85) : Color.white.opacity(configuration.isPressed ? 0.22 : 0.1))
-            )
-            .foregroundStyle(active ? Color.black : Color.white)
-            .contentShape(Rectangle())
+        PillLabel(configuration: configuration, tint: tint, active: active)
+    }
+
+    private struct PillLabel: View {
+        let configuration: Configuration
+        let tint: Color
+        let active: Bool
+        @Environment(\.notchTheme) private var theme
+
+        var body: some View {
+            configuration.label
+                .font(.system(size: 11, weight: .semibold))
+                .padding(.horizontal, 10).padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .fill(active ? tint.opacity(0.85) : theme.foregroundColor.opacity(configuration.isPressed ? 0.22 : 0.1))
+                )
+                .foregroundStyle(active ? theme.onAccentColor : theme.foregroundColor)
+                .contentShape(Rectangle())
+        }
     }
 }
 
