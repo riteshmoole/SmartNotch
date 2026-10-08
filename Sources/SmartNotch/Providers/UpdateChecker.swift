@@ -1,8 +1,7 @@
 import AppKit
 
-/// Checks GitHub Releases for a newer version at launch and once a day. No Sparkle: unnotarized
-/// updates would hit Gatekeeper anyway, so we badge the notch's gear icon and link to the download.
-/// Disabled until `repository` is set.
+/// Checks GitHub Releases for a newer version at launch and once a day, badges the notch's gear
+/// icon, and can install the update in place (`SelfUpdate`). Disabled until `repository` is set.
 @MainActor
 final class UpdateChecker: ObservableObject {
     /// "owner/repo" on GitHub. Leave empty to make no network requests at all.
@@ -18,6 +17,12 @@ final class UpdateChecker: ObservableObject {
     @Published private(set) var isChecking = false
     @Published private(set) var lastCheckFailed = false
 
+    enum InstallState: Equatable {
+        case idle, installing
+        case failed(String)
+    }
+    @Published private(set) var installState = InstallState.idle
+
     private var timer: Timer?
 
     var currentVersion: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0" }
@@ -27,7 +32,7 @@ final class UpdateChecker: ObservableObject {
     }
 
     /// Numeric, per-component comparison, so "0.1.10" is newer than "0.1.9".
-    static func isNewer(_ a: String, than b: String) -> Bool {
+    nonisolated static func isNewer(_ a: String, than b: String) -> Bool {
         a.compare(b, options: .numeric) == .orderedDescending
     }
 
@@ -66,6 +71,27 @@ final class UpdateChecker: ObservableObject {
             self.latestVersion = tag.trimmingCharacters(in: CharacterSet(charactersIn: "vV"))
             self.releaseURL = (json["html_url"] as? String).flatMap(URL.init(string:))
             self.releaseSummary = (json["body"] as? String).flatMap(Self.summary(fromNotes:))
+        }
+    }
+
+    /// Downloads and installs the latest release over this copy, then relaunches.
+    func installUpdate() {
+        guard installState != .installing else { return }
+        if let blocker = SelfUpdate.blocker {
+            installState = .failed(blocker)
+            return
+        }
+        installState = .installing
+        let current = currentVersion
+        Task {
+            do {
+                let work = try await SelfUpdate.install(from: Self.downloadURL, currentVersion: current)
+                log.info("Update installed, relaunching")
+                SelfUpdate.relaunch(cleaning: work)
+            } catch {
+                log.error("Update install failed: \(error.localizedDescription, privacy: .public)")
+                self.installState = .failed(error.localizedDescription)
+            }
         }
     }
 

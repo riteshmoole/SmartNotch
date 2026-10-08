@@ -96,6 +96,14 @@
   }
   ol.steps b { color: var(--text); }
   .note { margin-top: 14px; color: var(--muted); font-size: 15px; }
+  h3.route { font-size: 19px; margin: 30px 0 6px; }
+  h3.route .pill { font-size: 12px; font-weight: 650; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: 2px; }
+  .route-lead { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+  .cmd { display: flex; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px 12px 12px 18px; }
+  .cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
+  .cmd button { font: inherit; font-size: 14px; font-weight: 600; color: #000; background: var(--text); border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; flex: none; }
+  .inline-btn { display: inline-block; margin-top: 8px; font-weight: 600; font-size: 15px; color: #fff; background: var(--accent); border-radius: 999px; padding: 6px 14px; }
+  .inline-btn:hover { text-decoration: none; filter: brightness(1.1); }
   kbd { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: #1d1d29; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 1px 6px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 15px; }
@@ -126,7 +134,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
         Download for Mac
       </a>
-      <span class="fine">Free · Apple Silicon (M1 or newer) · macOS 14+ · <a href="#install">How to open it</a></span>
+      <span class="fine">Free · Apple Silicon (M1 or newer) · macOS 14+ · <a href="#install">How to install</a></span>
     </div>
 
     <div class="stage">
@@ -170,26 +178,37 @@
 
   <section id="install">
     <h2>Install in a minute</h2>
-    <p class="lead">SmartNotch is a free student project, so it isn't registered with Apple's paid developer program. macOS asks you to confirm once. Here's how:</p>
+    <p class="lead">SmartNotch is a free student project, so it isn't registered with Apple's paid developer program. Pick whichever way suits you. Either way you only set it up once: updates install themselves from inside the app.</p>
+
+    <h3 class="route">Option 1: one command<span class="pill">No security prompt</span></h3>
+    <p class="route-lead">Open <b>Terminal</b> (press <kbd>⌘</kbd> <kbd>Space</kbd>, type Terminal, press Return), paste this line and press Return:</p>
+    <div class="cmd">
+      <code id="cmd">curl -fsSL https://riteshmoole.github.io/SmartNotch/install.sh | bash</code>
+      <button type="button" id="copy">Copy</button>
+    </div>
+    <p class="note">It downloads the latest version, checks it's signed by SmartNotch's own certificate, puts it in Applications and opens it. Because the download didn't come from a browser, macOS doesn't ask you to approve it. <a href="install.sh">Read the script</a> first if you like. It's short.</p>
+
+    <h3 class="route">Option 2: download the app</h3>
     <ol class="steps">
       <li><b>Download</b> SmartNotch.zip. Safari unzips it for you. In other browsers, double-click the ZIP in Downloads.</li>
       <li><b>Drag SmartNotch from Downloads into Applications.</b></li>
       <li><b>Open SmartNotch</b> from Applications. macOS says it can't verify the app. Click <b>Done</b>. Don't move it to the Trash.</li>
-      <li>Open <b>System Settings → Privacy &amp; Security</b>, scroll down to <b>Security</b>, and click <b>Open Anyway</b> next to "SmartNotch was blocked". Confirm with Touch ID or your password.</li>
+      <li>Open Privacy &amp; Security, scroll down to <b>Security</b>, and click <b>Open Anyway</b> next to "SmartNotch was blocked". Confirm with Touch ID or your password.<br>
+        <a class="inline-btn" href="x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension">Open Privacy &amp; Security</a></li>
     </ol>
     <p class="note">That's it. After that it opens like any other app. Look for the icon in your menu bar. The full source code is <a href="https://github.com/riteshmoole/SmartNotch">on GitHub</a> if you'd like to check it first.</p>
   </section>
 
   <section id="updates">
     <h2>Updates find you</h2>
-    <p class="lead">When a new version is out, a red dot appears on the gear in the open notch. Click it to see what's new and download it. The menu bar icon gets an <b>Update Available</b> item too.</p>
+    <p class="lead">When a new version is out, a red dot appears on the gear in the open notch, and the menu bar icon gets an <b>Update Available</b> item. Click either, then <b>Install Update</b>. SmartNotch downloads the new version, replaces itself and reopens. No dragging, no security prompt, and your settings and permissions carry over.</p>
     <div class="wing" style="max-width:640px;margin-top:18px"><img src="screenshots/update-badge.png" alt="The top row of the open notch, with a small red dot on the settings gear at the right"><span>A new version is ready</span></div>
-    <p class="note">To update, quit SmartNotch, drag the new version into Applications and choose Replace. Your settings and permissions carry over.</p>
+    <p class="note">Install Update arrived in version 0.1.6. On 0.1.5 or older, update by hand one last time: run the command above, or download the ZIP, quit SmartNotch, drag the new one into Applications and choose Replace.</p>
   </section>
 
   <section id="privacy">
     <h2>Private by design</h2>
-    <p class="lead">No accounts, no analytics, no tracking. Nothing about you leaves your Mac. The only network request is a daily check for new versions, and you can turn it off. SmartNotch only asks for a permission when you use the feature that needs it.</p>
+    <p class="lead">No accounts, no analytics, no tracking. Nothing about you leaves your Mac. The only network requests are a daily check for new versions (you can turn it off) and the download when you click Install Update. SmartNotch only asks for a permission when you use the feature that needs it.</p>
     <table>
       <thead><tr><th>Feature</th><th>Permission</th><th>When it's asked</th></tr></thead>
       <tbody>
@@ -205,11 +224,11 @@
     <h2>Questions</h2>
     <details><summary>Does it work on my Mac?</summary><p>Any Mac with Apple Silicon (M1 or newer) running macOS 14 Sonoma or later. Best on MacBooks with a notch. Other screens get a floating pill.</p></details>
     <details><summary>macOS says "SmartNotch.dmg" Not Opened. What now?</summary><p>That's the old download format. macOS blocks it before it even opens. <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">Download the ZIP</a> instead and follow the steps above. If you'd rather keep the DMG: click Done, then go to System Settings → Privacy &amp; Security and click Open Anyway, once for the DMG and once more for the app.</p></details>
-    <details><summary>Why does macOS warn me when I open it?</summary><p>Apple's warning appears for any app that isn't notarized through its $99/year developer program. SmartNotch is free and open source, and you confirm it once in Privacy &amp; Security.</p></details>
+    <details><summary>Why does macOS warn me when I open it?</summary><p>Apple's warning appears for any app downloaded in a browser that isn't notarized through its $99/year developer program. SmartNotch is free and open source, so you confirm it once in Privacy &amp; Security, or use the <a href="#install">one-line install</a>, which skips the warning. Updates installed from inside the app never show it.</p></details>
     <details><summary>Will Now Playing always work?</summary><p>It uses a workaround to read what's playing, and a future macOS update could break it. If that happens, SmartNotch falls back to Music and Spotify and tells you, instead of showing an empty panel.</p></details>
     <details><summary>Can it show my notifications or who's calling?</summary><p>No. Apple doesn't let apps read other apps' notifications. The "In a call" indicator only knows that your mic or camera is busy, so it appears once you answer, not while the call is ringing.</p></details>
     <details><summary>How do I uninstall it?</summary><p>Quit it from the menu bar icon and drag SmartNotch from Applications to the Trash. Optionally delete <code>~/Library/Application Support/SmartNotch</code>.</p></details>
-    <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, then Download, quit SmartNotch, and drag the new SmartNotch from Downloads into Applications (choose Replace). The <a href="https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip">download link</a> always serves the newest version too.</p></details>
+    <details><summary>How do I get updates?</summary><p>SmartNotch checks for a new version when it starts and once a day. When one is out, a red dot appears on the gear in the open notch and an <b>Update Available</b> item appears in the menu bar. Click either, then <b>Install Update</b>: SmartNotch replaces itself and reopens. If that can't work (for example, on an account that isn't allowed to change apps), it tells you why and the Download button still works. Running the <a href="#install">install command</a> again also updates it.</p></details>
   </section>
 </main>
 
@@ -221,6 +240,11 @@
 </footer>
 
 <script>
+  document.getElementById('copy').addEventListener('click', async e => {
+    try { await navigator.clipboard.writeText(document.getElementById('cmd').textContent); e.target.textContent = 'Copied'; }
+    catch { e.target.textContent = 'Select and copy'; }
+    setTimeout(() => { e.target.textContent = 'Copy'; }, 1800);
+  });
   const shot = document.getElementById('shot');
   document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('.switch button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));

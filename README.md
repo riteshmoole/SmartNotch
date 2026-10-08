@@ -26,20 +26,32 @@ Free, open source (MIT), and private: **no accounts, no analytics, nothing leave
 
 **Requirements:** a Mac with Apple Silicon (M1 or newer), macOS 14 Sonoma or later.
 
+### Option 1: one command (no security prompt)
+
+Open Terminal and paste:
+
+```sh
+curl -fsSL https://riteshmoole.github.io/SmartNotch/install.sh | bash
+```
+
+It downloads the latest release, checks it's signed by SmartNotch's own certificate, installs it in Applications and opens it. Downloads made with `curl` aren't flagged as "from the internet", so macOS doesn't ask you to approve the app. The script is [docs/install.sh](docs/install.sh) if you want to read it first.
+
+### Option 2: download the app
+
 1. [Download SmartNotch.zip](https://github.com/riteshmoole/SmartNotch/releases/latest/download/SmartNotch.zip). Safari unzips it for you. In other browsers, double-click the ZIP in Downloads.
 2. Drag **SmartNotch** from Downloads into **Applications**.
 3. Open SmartNotch from Applications. macOS will say it can't verify the app. Click **Done** (not Move to Trash).
 4. Go to **System Settings → Privacy & Security**, scroll to **Security**, and click **Open Anyway** next to "SmartNotch was blocked". Confirm with Touch ID or your password.
 
-You only do this once. *Got "SmartNotch.dmg Not Opened"?* That's the old download format, which macOS blocks before it opens. Download the ZIP above instead. *Why the warning?* SmartNotch is a free project that isn't signed with a paid ($99/yr) Apple Developer certificate, so macOS can't vouch for it. The full source is right here if you want to check it or build it yourself.
+You only do this once. Updates install from inside the app and never ask again. *Got "SmartNotch.dmg Not Opened"?* That's the old download format, which macOS blocks before it opens. Download the ZIP above instead. *Why the warning?* SmartNotch is a free project that isn't signed with a paid ($99/yr) Apple Developer certificate, so macOS can't vouch for it. The full source is right here if you want to check it or build it yourself.
 
 ## Updating
 
-SmartNotch checks GitHub for a new version when it starts and once a day. When one is out, a red dot appears on the ⚙️ gear in the open notch, and the menu bar icon gets an **Update Available** item. Click either to see what's new, then:
+SmartNotch checks GitHub for a new version when it starts and once a day. When one is out, a red dot appears on the ⚙️ gear in the open notch, and the menu bar icon gets an **Update Available** item. Click either to see what's new, then click **Install Update**. SmartNotch downloads the new version, checks it's signed with the same certificate, replaces itself and reopens. There's no security prompt, and your settings and permissions carry over.
 
-1. Click **Download**, and quit SmartNotch from its menu bar icon.
-2. Drag the new **SmartNotch** from Downloads into **Applications**. Choose **Replace**.
-3. Open SmartNotch. Your settings and permissions carry over. If macOS asks again, use **Open Anyway** as above.
+If it can't update itself (for example, it's running from Downloads, or your account can't change apps in Applications), it says why. Then click **Download**, quit SmartNotch, drag the new one into Applications and choose **Replace**, or run the install command again.
+
+*On 0.1.5 or older?* Install Update arrived in 0.1.6, so update by hand one last time.
 
 Prefer no network at all? Turn off **Settings → General → Check for updates once a day**.
 
@@ -62,7 +74,7 @@ SmartNotch **never** asks for Location, Full Disk Access, or Screen Recording.
 - Shelf files are stored in `~/Library/Application Support/SmartNotch/Shelf` and cleared automatically (24 h by default).
 - The "In a call" indicator only checks *whether* your mic or camera is busy while a call app is open. It never sees who you're talking to.
 - The notch is hidden from screen sharing and recordings by default.
-- The only network request is the update check: a plain download of the latest release info from GitHub, which sends nothing about you or your Mac. You can turn it off.
+- The only network requests are the update check (a plain download of the latest release info from GitHub, which sends nothing about you or your Mac; you can turn it off) and downloading the update when you click Install Update.
 
 ## Known limits (honest list)
 

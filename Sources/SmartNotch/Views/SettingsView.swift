@@ -275,11 +275,24 @@ private struct UpdateCard: View {
             if let summary = updates.releaseSummary {
                 Text(verbatim: summary).font(.callout).fixedSize(horizontal: false, vertical: true)
             }
-            Text("To update: click Download, quit SmartNotch, then drag the new SmartNotch from Downloads into Applications and choose Replace. Your settings and permissions carry over.")
-                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            switch updates.installState {
+            case .idle:
+                Text("SmartNotch downloads the update, replaces itself and reopens. Your settings and permissions carry over.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            case .installing:
+                HStack(spacing: 6) {
+                    ProgressView().controlSize(.small)
+                    Text("Downloading and installing…").font(.caption).foregroundStyle(.secondary)
+                }
+            case .failed(let reason):
+                Text("Couldn't install automatically: \(reason) Click Download instead, quit SmartNotch, then drag the new SmartNotch into Applications and choose Replace.")
+                    .font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+            }
             HStack {
-                Button("Download") { NSWorkspace.shared.open(UpdateChecker.downloadURL) }
+                Button("Install Update") { updates.installUpdate() }
                     .buttonStyle(.borderedProminent)
+                    .disabled(updates.installState == .installing)
+                Button("Download") { NSWorkspace.shared.open(UpdateChecker.downloadURL) }
                 if let url = updates.releaseURL {
                     Link("What's new", destination: url)
                 }

@@ -14,7 +14,7 @@ After that it opens normally. Look for the notch at the top of your screen and
 the SmartNotch icon in the menu bar.
 
 Updating later: when a new version is out, a red dot appears on the gear in the
-open notch. Click it, download, quit SmartNotch, then drag the new app into
-Applications and choose Replace. Your settings carry over.
+open notch. Click it, then "Install Update". SmartNotch replaces itself and
+reopens. Your settings and permissions carry over.
 
 Requirements: a Mac with Apple Silicon (M1 or newer), macOS 14 Sonoma or later.
