@@ -21,7 +21,7 @@ struct SettingsView: View {
             GeneralSettings(settings: settings, updates: state.updates)
                 .tabItem { Label("General", systemImage: "gearshape") }
                 .tag(SettingsTab.general)
-            ModuleSettings(settings: settings, mediaKeys: state.mediaKeys, nowPlaying: state.nowPlaying, call: state.call, clipboard: state.clipboard)
+            ModuleSettings(settings: settings, mediaKeys: state.mediaKeys, volume: state.volume, nowPlaying: state.nowPlaying, call: state.call, clipboard: state.clipboard)
                 .tabItem { Label("Modules", systemImage: "square.grid.2x2") }
                 .tag(SettingsTab.modules)
             AppearanceSettings(settings: settings, themes: themes)
@@ -86,6 +86,7 @@ private struct GeneralSettings: View {
 private struct ModuleSettings: View {
     @ObservedObject var settings: Settings
     @ObservedObject var mediaKeys: MediaKeyTap
+    @ObservedObject var volume: VolumeController
     @ObservedObject var nowPlaying: NowPlayingProvider
     @ObservedObject var call: CallActivityMonitor
     let clipboard: ClipboardMonitor
@@ -142,9 +143,21 @@ private struct ModuleSettings: View {
                     Text("Needs Accessibility permission. Outputs without software volume (some HDMI displays) keep the normal behavior.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
+                if settings.hudReplacement {
+                    Text(hudStatus).font(.caption).foregroundStyle(mediaKeys.isActive && volume.canSet ? .green : .secondary)
+                }
             }
         }
         .formStyle(.grouped)
+    }
+
+    /// Live status, so "the volume HUD doesn't show" can be narrowed down to permission or output device.
+    private var hudStatus: String {
+        let output = volume.deviceName ?? "the current output"
+        if !mediaKeys.isTrusted { return "Status: waiting for Accessibility permission." }
+        if !mediaKeys.isActive { return "Status: couldn't catch the volume keys. Turn the switch off and on, or restart SmartNotch." }
+        if !volume.canSet { return "Status: \(output) has no software volume, so macOS keeps its own overlay." }
+        return "Status: working (output: \(output))."
     }
 
     /// Live status, so "it doesn't show my call" can be narrowed down to the app or the mic.

@@ -123,8 +123,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.state.settings.hasCompletedOnboarding = true
             self?.onboardingWindow?.close()
         }
-        onboardingWindow = makeWindow(title: "Welcome to SmartNotch", size: NSSize(width: 520, height: 520), root: view)
-        present(onboardingWindow!)
+        let w = makeWindow(title: "Welcome to SmartNotch", size: NSSize(width: 520, height: 520), root: view)
+        // Closing the window with the red button counts too. Otherwise the volume HUD (which waits
+        // for onboarding so its permission prompt doesn't pop up over the welcome screen) never starts.
+        NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: w, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.state.settings.hasCompletedOnboarding = true }
+        }
+        onboardingWindow = w
+        present(w)
     }
 
     private func makeWindow<V: View>(title: String, size: NSSize, root: V) -> NSWindow {

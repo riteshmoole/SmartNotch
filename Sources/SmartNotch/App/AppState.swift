@@ -45,7 +45,7 @@ enum CollapsedActivity: Equatable {
         case .media: 36
         case .timer: 56
         case .call: 64
-        case .hud: 76
+        case .hud: 120
         case .charging: 92
         }
     }

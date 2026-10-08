@@ -61,7 +61,7 @@ struct CollapsedWingsView: View {
         case .hud:
             if case .volume(let level, let muted) = app.hud {
                 LevelBar(value: muted ? 0 : Double(level), tint: theme.accentColor)
-                    .frame(width: 46, height: 5)
+                    .frame(width: 96, height: 6)
             }
         case .charging:
             if let f = app.chargingFlash {
